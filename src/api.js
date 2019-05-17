@@ -1,3 +1,5 @@
+// import {useState} from "react";
+
 let JWT = "null";
 
 export function regBtn(email, password) {
@@ -36,24 +38,8 @@ export function logBtn(username, password) {
       }
       throw new Error("Network response was not ok.");
     })
-    .then(function(res) {
-      JWT = res.token;
-    })
-    .catch(function(error) {
-      console.log(
-        "There has been a problem with your fetch operation: ",
-        error.message
-      );
-    });
-}
-
-export function offBtn() {
-  return fetch("https://cab230.hackhouse.sh/offences")
-    .then(function(response) {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error("Network response was not ok.");
+    .then(function(result) {
+      JWT = result.token;
     })
     .catch(function(error) {
       console.log(
@@ -68,12 +54,10 @@ function serBtn(input) {
   let getParam = { method: "GET" };
   let head = { Authorization: `Bearer ${JWT}` };
   getParam.headers = head;
-
+  
   //The URL
-  const baseUrl = "https://cab230.hackhouse.sh/search?";
   const userInput = document.getElementById("myInput").value;
-  // const userInput =
-  const url = baseUrl + "offence=" + userInput;
+  const url = "https://cab230.hackhouse.sh/search?offence="  + userInput;
 
   return fetch(encodeURI(url), getParam)
     .then(function(response) {

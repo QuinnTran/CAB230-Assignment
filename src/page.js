@@ -1,9 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Filter from "./FORMS/filter";
-import Signin from "./FORMS/signin";
-import Signup from "./FORMS/signup";
+import Filter from "./new forms/filter";
 import Offences from "./offence";
+import Log from "./new forms/log";
+import Reg from "./new forms/reg";
+import Ser from "./new forms/search"
+
 
 import "./styles.css";
 
@@ -18,23 +20,15 @@ function Page() {
         <Link to="/register">Register</Link>
         <Link to="/login">Login</Link>
         <Link to="/offences">Offences</Link>
+        <Link to="/search">Search</Link>
         <Link to="/filter">Filter</Link>
-        <div className="search-container">
-          <input
-            name="search"
-            id="myInput"
-            type="text"
-            value=""
-            placeholder="Search"
-          />
-          <button id="serBtn">Search</button>
-        </div>
       </div>
 
       <Route exact path="/" component={Home} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/offences" component={OffencesPage} />
+      <Route path="/search" component={SearchPage} />
       <Route path="/filter" component={FilterPage} />
     </Router>
   );
@@ -47,7 +41,7 @@ function Home() {
 function RegisterPage() {
   return (
     <div>
-      <Signup />
+      <Reg />
     </div>
   );
 }
@@ -55,15 +49,25 @@ function RegisterPage() {
 function LoginPage() {
   return (
     <div>
-      <Signin />
+      <Log />
     </div>
   );
 }
+
 //OFFENCE PAGE
 function OffencesPage() {
   return (
     <div>
-      <Offences />
+      <Offences/>
+    </div>
+  );
+}
+//SEARCH PAGE
+function SearchPage() {
+  const [search, setSearch] = useState("");
+  return (
+    <div>
+      <Ser onSubmit={setSearch} />
     </div>
   );
 }
