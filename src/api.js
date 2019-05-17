@@ -1,4 +1,4 @@
-// import {useState} from "react";
+import {useState} from "react";
 
 let JWT = "null";
 
@@ -50,6 +50,9 @@ export function logBtn(username, password) {
 }
 
 function serBtn(input) {
+  //replace userInput with query --> See example https://www.robinwieruch.de/local-storage-react/
+  const[query]=useState("");
+
   //The parameters of the call
   let getParam = { method: "GET" };
   let head = { Authorization: `Bearer ${JWT}` };

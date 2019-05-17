@@ -14,8 +14,6 @@ export default function Offences() {
       setOffences(i);
     });
 
-    
-
     return (
       <table>
       {offences.map( value => <tr><td>{value}</td></tr>)}

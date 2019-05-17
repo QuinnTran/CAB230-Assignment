@@ -4,7 +4,8 @@ import Filter from "./new forms/filter";
 import Offences from "./offence";
 import Log from "./new forms/log";
 import Reg from "./new forms/reg";
-import Ser from "./new forms/search"
+import Ser from "./new forms/search";
+import Search from "./new forms/search(ex)"
 
 
 import "./styles.css";
@@ -64,10 +65,9 @@ function OffencesPage() {
 }
 //SEARCH PAGE
 function SearchPage() {
-  const [search, setSearch] = useState("");
   return (
     <div>
-      <Ser onSubmit={setSearch} />
+      <Ser />
     </div>
   );
 }

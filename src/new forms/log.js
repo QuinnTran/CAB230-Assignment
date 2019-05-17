@@ -1,18 +1,6 @@
-
 import React, {useState, useEffect} from 'react';
 import { logBtn} from "../api"
-
-const useStateWithLocalStorage = localStorageKey => {
-    const [value, setValue] = useState(
-        localStorage.getItem(localStorageKey) || ''
-    );
-
-  useEffect(() => {
-    localStorage.setItem(localStorageKey, value);
-  }, [value]);
-    
-  return [value, setValue];
-};
+import useStateWithLocalStorage from "./local-storage";
 
 const Log = () => {
    const [value, setValue] = useStateWithLocalStorage(
