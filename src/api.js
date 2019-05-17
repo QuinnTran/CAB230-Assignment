@@ -50,7 +50,6 @@ export function logBtn(username, password) {
 }
 
 function serBtn(input) {
-
   //The parameters of the call
   let getParam = { method: "GET" };
   let head = { Authorization: `Bearer ${JWT}` };
