@@ -1,6 +1,6 @@
 import React from "react";
 import hook from "./hook";
-import regBtn from "../api";
+import {regBtn} from "../api";
 
 //REGISTER PAGE
 const Signup = () => {

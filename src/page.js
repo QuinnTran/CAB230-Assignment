@@ -63,7 +63,7 @@ function LoginPage() {
 function OffencesPage() {
   return (
     <div>
-      <OffencesPage />
+      <Offences />
     </div>
   );
 }

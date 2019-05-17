@@ -1,6 +1,6 @@
 import React from "react";
 import hook from "./hook";
-import logBtn from "../api";
+import {logBtn} from "../api";
 //LOGIN PAGE
 const Signin = () => {
   const { inputs, handleInputChange, handleSubmit } = hook({

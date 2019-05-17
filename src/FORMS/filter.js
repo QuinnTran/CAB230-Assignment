@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReactTable from "react-table";
 
-export function Filter() {
+export default function Filter() {
   const { data, pages, loading } = useState("");
 
   return (

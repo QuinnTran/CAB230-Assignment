@@ -1,5 +1,5 @@
 import React from "react";
-import offBtn from "./api";
+import {offBtn} from "./api";
 
 function Offences() {
   return (
@@ -9,3 +9,5 @@ function Offences() {
     </div>
   );
 }
+
+export default Offences;
