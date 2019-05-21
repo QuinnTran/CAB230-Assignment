@@ -1,11 +1,11 @@
-import React, {useState} from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Filter from "./new forms/filter";
-import Offences from "./offence";
-import Log from "./new forms/log";
-import Reg from "./new forms/reg";
-import Ser from "./new forms/search";
-import Search from "./new forms/search(ex)"
+
+import Off from "./offence";
+import Fil from "./forms/filter";
+import Log from "./forms/log";
+import Reg from "./forms/reg";
+import Ser from "./forms/search"
 
 
 import "./styles.css";
@@ -21,15 +21,18 @@ function Page() {
         <Link to="/register">Register</Link>
         <Link to="/login">Login</Link>
         <Link to="/offences">Offences</Link>
-        <Link to="/search">Search</Link>
+        {/* <Link to="/search">Search</Link> */}
         <Link to="/filter">Filter</Link>
+        <div className="search-container">
+          <Ser />
+        </div>
       </div>
 
       <Route exact path="/" component={Home} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/offences" component={OffencesPage} />
-      <Route path="/search" component={SearchPage} />
+      {/* <Route path="/search" component={SearchPage} /> */}
       <Route path="/filter" component={FilterPage} />
     </Router>
   );
@@ -59,23 +62,23 @@ function LoginPage() {
 function OffencesPage() {
   return (
     <div>
-      <Offences/>
+      <Off/>
     </div>
   );
 }
 //SEARCH PAGE
-function SearchPage() {
-  return (
-    <div>
-      <Ser />
-    </div>
-  );
-}
+// function SearchPage() {
+//   return (
+//     <div>
+//       <Ser />
+//     </div>
+//   );
+// }
 //FILTER PAGE
 function FilterPage() {
   return (
     <div>
-      <Filter />
+      <Fil />
     </div>
   );
 }
