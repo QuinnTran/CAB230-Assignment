@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-export default function Offences() {
+export default function Off() {
   const [offences, setOffences] = useState([]);
   var i=[];
 
