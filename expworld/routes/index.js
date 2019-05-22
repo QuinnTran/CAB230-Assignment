@@ -7,9 +7,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.get("/offences", function(req,res, next) {
-  req.db.from('offences').select("id", "district")
+  req.db.from('offences').select("id")
   .then((rows) => {
-  res.json({"Error" : false, "Message" : "Success", "City" : rows})
+  res.json({"Error" : false, "Message" : "Success", "offences" : rows})
   })
   .catch((err) => {
   console.log(err);

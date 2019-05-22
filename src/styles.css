@@ -36,7 +36,7 @@
 }
 /* Style the search box inside the navigation bar */
 .topnav input[type=text] {
-  padding: 9px;
+  padding:  7px;
   margin-top: 2px;
   font-size: 17px;
   border: none;

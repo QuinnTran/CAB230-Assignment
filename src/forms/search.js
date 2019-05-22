@@ -38,9 +38,9 @@ class Ser extends React.Component {
           </form>
   
           {/* Result */}
-        {this.state.hits.map(item => (
+          {this.state.hits.map(item => (
           <div key={item.objectID}>{item.title}</div>
-        ))}
+          ))}
         </div>
       );
     }

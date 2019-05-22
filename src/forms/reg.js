@@ -18,12 +18,12 @@ const Reg = () => {
       <h2>Create your account here</h2>
       <form >
         <label className="email">Email: </label>
-        <input type="email" />
+        <input type="email" value={value}/>
         <br></br><br></br>
         <label className="password">Password: </label>
         <input type="password" />
         <br></br><br></br>
-        <button type="submit" onClick={regBtn}><Link to="/login">Register</Link></button>
+        <button onClick={regBtn}><Link to="/login">Register</Link></button>
       </form>
     </div>
   );

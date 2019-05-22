@@ -21,7 +21,7 @@ function Page() {
         <Link to="/register">Register</Link>
         <Link to="/login">Login</Link>
         <Link to="/offences">Offences</Link>
-        {/* <Link to="/search">Search</Link> */}
+        <Link to="/search">Search</Link>
         <Link to="/filter">Filter</Link>
         <div className="search-container">
           <Ser />
@@ -32,7 +32,7 @@ function Page() {
       <Route path="/register" component={RegisterPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/offences" component={OffencesPage} />
-      {/* <Route path="/search" component={SearchPage} /> */}
+      <Route path="/search" component={SearchPage} />
       <Route path="/filter" component={FilterPage} />
     </Router>
   );
@@ -62,18 +62,19 @@ function LoginPage() {
 function OffencesPage() {
   return (
     <div>
+      <h2>List of offences</h2>
       <Off/>
     </div>
   );
 }
 //SEARCH PAGE
-// function SearchPage() {
-//   return (
-//     <div>
-//       <Ser />
-//     </div>
-//   );
-// }
+function SearchPage() {
+  return (
+    <div>
+      <h2>Result</h2>
+    </div>
+  );
+}
 //FILTER PAGE
 function FilterPage() {
   return (
