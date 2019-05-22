@@ -5,10 +5,9 @@ import Log from "./log";
 import userLocalStorage from "./local-storage";
 
 const Reg = () => {
-  const [value, setValue] = userLocalStorage(
+  const [value] = userLocalStorage(
     'myValueInLocalStorage'
   );
-  const onChange = event => setValue(event.target.value);
 
   return (
     <div className="container">
