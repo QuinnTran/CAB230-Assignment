@@ -1,4 +1,3 @@
-import React, {useState} from "react";
 
 let JWT ="null";
 
@@ -39,31 +38,40 @@ export function logBtn(username, password) {
     });
 }
 
-export default function Ser() {
+export function serBtn(search) {
   //The parameters of the call
   let getParam = { method: "GET" };
   let head = { Authorization: `Bearer ${JWT}` };
   getParam.headers = head;
   
   //The URL
-  const[query]=useState("");
-  const url = "https://cab230.hackhouse.sh/search?offence="  + query;
+  const query = "offence=" + search;
+  const url = "https://cab230.hackhouse.sh/search?offence=" + query;
 
   fetch(encodeURI(url), getParam)
-    .then(res => res.json())   
+    .then(res => res.json()) 
+    .then(res => res.results)
+    .then(results => results.map(result => ({
+      offence: result.offence,
+      area: result.area,
+      age: result.age,
+      gender: result.gender,
+      year: result.year
+    })))
 }
 
-export function filBtn() {
-  const [param, userInput] = useState("");
+export function filBtn(search) {
+  const param = "";
+  const query = search;
   let filter = "";
 
   //Example filter strings
   if (param === "area") {
-    filter = "area=" + userInput;
+    filter = "area=" + query;
   } else if (param === "age") {
-    filter = "age=" + userInput;
+    filter = "age=" + query;
   } else if (param === "year") {
-    filter = "year=" + userInput;
+    filter = "year=" + query;
   }
 
   //The parameters of the call
@@ -72,7 +80,7 @@ export function filBtn() {
   getParam.headers = head;
 
   //The URL
-  const url = "https://cab230.hackhouse.sh/search?offence="  + userInput + "&" + filter;
+  const url = "https://cab230.hackhouse.sh/search?offence="  + query + "&" + filter;
 
   return fetch(encodeURI(url), getParam)
     .then(res => res.json()

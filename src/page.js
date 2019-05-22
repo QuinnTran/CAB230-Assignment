@@ -1,11 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import Off from "./offence";
 import Fil from "./forms/filter";
 import Log from "./forms/log";
 import Reg from "./forms/reg";
-import Ser from "./forms/search"
+import {useSearchBtn, SearchBar} from "./forms/search"
 
 
 import "./styles.css";
@@ -23,9 +23,6 @@ function Page() {
         <Link to="/offences">Offences</Link>
         <Link to="/search">Search</Link>
         <Link to="/filter">Filter</Link>
-        <div className="search-container">
-          <Ser />
-        </div>
       </div>
 
       <Route exact path="/" component={Home} />
@@ -69,11 +66,23 @@ function OffencesPage() {
 }
 //SEARCH PAGE
 function SearchPage() {
+  const [search, setSearch] = useState("");
+  const { loading, data, error } = useSearchBtn(search);
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (error) {
+    return <p>Something went wrong: {error.message}</p>;
+  }
   return (
     <div>
       <h2>Result</h2>
+      <SearchBar onSubmit={setSearch} />
+      {data.map(value => (
+        <createTable key={data.offence} area={data.area} age={data.age} gender={data.gender} year={data.year} />
+      ))}
     </div>
-  );
+  )
 }
 //FILTER PAGE
 function FilterPage() {

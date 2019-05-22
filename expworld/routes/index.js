@@ -1,74 +1,93 @@
 var express = require('express');
+const mysql = require('mysql');
+
 var router = express.Router();
 
-/* GET home page. */
+// HOME
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Crime Database' });
 });
-// Search
-router.get("/search", function(req,res, next) {
-  req.db.from('search').select("offence","area","age","gender","year","month")
-  .then((rows) => {
-  res.json({"Error" : false, "Message" : "Success", "search" : rows})
-  })
-  .catch((err) => {
-  console.log(err);
-  res.json({"Error" : true, "Message" : "Error in MySQL query"})
-  })
- });
 
-// Offences
-router.get("/offences", function(req,res, next) {
-  req.db.from('offences').select("pretty")
-  .then((rows) => {
-  res.json({"Error" : false, "Message" : "Success", "offences" : rows})
-  })
-  .catch((err) => {
-  console.log(err);
-  res.json({"Error" : true, "Message" : "Error in MySQL query"})
-  })
- });
-// Areas
- router.get("/offences/areas",function(req,res,next) {
-  req.db.from('offences').select('*').where('Area','=',req.params.Area)
-  .then((rows) => {
-  res.json({"Error" : false, "Message" : "Success", "Area" : rows})
-  })
-  .catch((err) => {
-  console.log(err);
-  res.json({"Error" : true, "Message" : "Error executing MySQL query"})
-  })
- });
- // Ages
- router.get("/ages",function(req,res,next) {
-  req.db.from('offences').select('*').where('Area','=',req.params.Area)
-  .then((rows) => {
-  res.json({"Error" : false, "Message" : "Success", "Area" : rows})
-  })
-  .catch((err) => {
-  console.log(err);
-  res.json({"Error" : true, "Message" : "Error executing MySQL query"})
-  })
- });// Genders
- router.get("/genders",function(req,res,next) {
-  req.db.from('offences').select('*').where('Area','=',req.params.Area)
-  .then((rows) => {
-  res.json({"Error" : false, "Message" : "Success", "Area" : rows})
-  })
-  .catch((err) => {
-  console.log(err);
-  res.json({"Error" : true, "Message" : "Error executing MySQL query"})
-  })
- });
- // Years
- router.get("/years",function(req,res,next) {
-  req.db.from('offences').select('*').where('Area','=',req.params.Area)
-  .then((rows) => {
-  res.json({"Error" : false, "Message" : "Success", "Area" : rows})
-  })
-  .catch((err) => {
-  console.log(err);
-  res.json({"Error" : true, "Message" : "Error executing MySQL query"})
-  })
- });
+//--------------------------------- SEARCH-------------------------------
+router.get("/search/:column",function(req,res){
+  var query = "SELECT * FROM ?? WHERE ??=?";
+  var table = ["offence_columns","column",req.params.column];
+  query = mysql.format(query,table);
+  req.db.query(query,function(err,rows){
+    if(err) {
+      res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+    } else {
+      res.json({"Offence" : rows});
+    }
+  });
+});
+
+//--------------------------------- HELPERS-------------------------------
+// OFFENCES
+router.get("/offences",function(req,res){
+  var query = "SELECT pretty FROM ??";
+  var table = ["offence_columns"];
+  query = mysql.format(query,table);
+  req.db.query(query,function(err,rows){
+  if(err) {
+    res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+  } else {
+    res.json({"Offences" : rows});
+  }
+  });
+});
+// AREAS
+router.get("/areas",function(req,res){
+  var query = "SELECT distinct(area) FROM ??";
+  var table = ["offences"];
+  query = mysql.format(query,table);
+  req.db.query(query,function(err,rows){
+  if(err) {
+  res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+  } else {
+  res.json({"Area" : rows});
+  }
+  });
+});
+// AGES
+router.get("/ages",function(req,res){
+  var query = "SELECT distinct(age) FROM ??";
+  var table = ["offences"];
+  query = mysql.format(query,table);
+  req.db.query(query,function(err,rows){
+  if(err) {
+  res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+  } else {
+  res.json({"Age" : rows});
+  }
+  });
+});
+// GENDERS
+router.get("/genders",function(req,res){
+  var query = "SELECT distinct(gender) FROM ??";
+  var table = ["offences"];
+  query = mysql.format(query,table);
+  req.db.query(query,function(err,rows){
+  if(err) {
+  res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+  } else {
+  res.json({"Gender" : rows});
+  }
+  });
+});
+// YEARS
+router.get("/years",function(req,res){
+  var query = "SELECT distinct(year) FROM ??";
+  var table = ["offences"];
+  query = mysql.format(query,table);
+  req.db.query(query,function(err,rows){
+  if(err) {
+  res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+  } else {
+  res.json({"Year" : rows});
+  }
+  });
+});
+
+
 module.exports = router;
