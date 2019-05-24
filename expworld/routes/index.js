@@ -22,7 +22,8 @@ router.post('/register', function (req, res, next) {
   req.db.from('users').insert(users)
     .then(res.send({
       "code":200,
-      "success":"user registered sucessfully"
+      "success":"user registered sucessfully",
+      "password":password
     }))
     .catch((err) => {
       console.log(err);
@@ -33,35 +34,27 @@ router.post('/register', function (req, res, next) {
 router.post('/login', function (req, res, next) {
   var email= req.body.email;
   var password = req.body.password;
-  
-  // -----ASSIGNED JWT-----
-  var privateKey = fs.readFileSync('email');
-  var token = jwt.sign({ id: 'id' }, privateKey, {expiresIn: 24*60*60});
-
-  // -----VERIFY JWT-----
-  // verify a token symmetric - synchronous
-  var decoded = jwt.verify(token, privateKey);
-  console.log(decoded.id) // bar
-  // verify a token symmetric
-  jwt.verify(token, privateKey, function(err, decoded) {
-    console.log(decoded.id) // bar
-  });
-  // invalid token - synchronous
-  try {
-    var decoded = jwt.verify(token, 'wrong-secret');
-  } catch(err) {
-    // err
-  }
-
-  req.db.from('users').select("*")
-    .then(res.send({
-      "code":200,
-      "success":"user registered sucessfully"
-    }))
-    .catch((err) => {
-      console.log(err);
-      res.json({ "Error": true, "Message": "Error in MySQL query" })
-    })
+  req.db.from('users').select("password")
+  .then(row => row[0].password)
+  .then(dbPass =>{
+    if(bcrypt.compareSync(password, dbPass)){
+      var expire = Math.floor(Date.now() / 1000) + (60 * 60);
+      // -----ASSIGNED JWT-----
+      var token = jwt.sign({ user: 'email' }, 'shhhhh');
+      res.send({
+        success: true,
+        message: 'Authentication successful!',
+        token: token,
+        expires_in: expire
+      });
+    }else{
+      res.send(401,"PASSWORD INCORRECT");
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+    res.json({ "Error": true, "Message": "Error in MySQL query" })
+  })
 });
 //--------------------------------- SEARCH-------------------------------
 router.get("/Search", function (req, res, next) {
