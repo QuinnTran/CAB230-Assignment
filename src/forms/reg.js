@@ -1,31 +1,60 @@
-import React from 'react';
-import { BrowserRouter as Route, Link } from "react-router-dom";
-import {regBtn} from "../api";
-import Log from "./log";
-import userLocalStorage from "./local-storage";
+import React, {useState} from 'react';
 
-const Reg = () => {
-  const [value] = userLocalStorage(
-    'myValueInLocalStorage'
-  );
-
+export default function Reg () {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <div className="container">
-      <div className="link-page">
-        <Route path="/login" component={Log} />
-      </div>
       <h2>Create your account here</h2>
-      <form >
-        <label className="email">Email: </label>
-        <input type="email" value={value}/>
+      <form
+        onSubmit={event => {
+          event.preventDefault();
+        }}
+      >
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value={email}
+          onChange={event => {
+            const { value } = event.target;
+            setEmail(value);
+          }}
+        />
         <br></br><br></br>
-        <label className="password">Password: </label>
-        <input type="password" />
+        <label htmlFor="password">Password: </label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          value={password}
+          onChange={event => {
+            const { value } = event.target;
+            setPassword(value);
+          }}
+         />
         <br></br><br></br>
-        <button onClick={regBtn}><Link to="/login">Register</Link></button>
+        <button type ="submit" onClick={() => regBtn(email, password)}>Register</button>
       </form>
     </div>
   );
 }
 
-export default Reg;
+
+function regBtn(email, password) {
+  return fetch("https://cab230.hackhouse.sh/register", {
+    method: "POST",
+    body: `email=${email}&password=${password}`,
+    headers: {
+      "Content-type": "application/x-www-form-urlencoded"
+    }
+  })
+  .then(res => res.json())
+  .catch(function(error) {
+    console.log(
+      "There has been a problem with your fetch operation: ",
+      error.message
+    );
+  });
+}
