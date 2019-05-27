@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
 
 //------------------------------- REG - LOG -----------------------------
 router.post('/register', function (req, res, next) {
-  const password = bcrypt.hash(req.body.password, 5);
+  const password = bcrypt.hashSync(req.body.password, 5);
   var today = new Date();
   var users={
     "email":req.body.email,
@@ -19,6 +19,7 @@ router.post('/register', function (req, res, next) {
     "created_at":today,
     "updated_at":today
   }
+
   req.db.from('users').insert(users)
     .then(res.send({
       "code":200,
@@ -34,17 +35,18 @@ router.post('/register', function (req, res, next) {
 router.post('/login', function (req, res, next) {
   var email= req.body.email;
   var password = req.body.password;
-  req.db.from('users').select("password")
+  req.db.from('users').select("password").where({email: email})
   .then(row => row[0].password)
-  .then(dbPass =>{
-    if(bcrypt.compareSync(password, dbPass)){
+  .then(passDB =>{
+    if(bcrypt.compareSync(password, passDB)){
       var expire = Math.floor(Date.now() / 1000) + (60 * 60);
       // -----ASSIGNED JWT-----
-      var token = jwt.sign({ user: 'email' }, 'shhhhh');
+      var token = jwt.sign({ user: email, exp: expire, time: Date.now()}, 'shhhhh');
       res.send({
-        success: true,
         message: 'Authentication successful!',
+        "Token type": "Bearer",
         token: token,
+        access_token: token,
         expires_in: expire
       });
     }else{
@@ -57,18 +59,37 @@ router.post('/login', function (req, res, next) {
   })
 });
 //--------------------------------- SEARCH-------------------------------
-router.get("/Search", function (req, res, next) {
-  let input = "";
-  const userInput = "offence=" + input;
-  req.db.from('offences').select('*').where(userInput,'=',req.params.userInput)
+router.get("/Search/:spec", function (req, res, next) {
+  let param = "";
+  let filter = "";
+  const userInput = "";
+
+  if (param === "area") {
+    filter = "area=" + search;
+  } else if (param === "age") {
+    filter = "age=" + search;
+  } else if (param === "year") {
+    filter = "year=" + search;
+  }
+
+  req.db
+  .from('offences', 'offence_columns')
+  .select('offence_columns.column','area', 'age', 'gender', 'year', 'month')
+  .where(year,'=',req.params.spec)
   .then((rows) => {
-  res.json({"Error" : false, "Message" : "Success", "Offences" : rows})
+    var data =[];
+    for (row of rows){
+      data.push`[${rows[`pretty`]},${rows[`area`]},${rows[`age`]},${rows[`gender`]},${rows[`year`]},${rows[`year`]}]`
+    }
+    res.json({
+      data
   })
   .catch((err) => {
   console.log(err);
   res.json({"Error" : true, "Message" : "Error executing MySQL query"})
   })
- });
+  });
+});
 //--------------------------------- HELPERS-------------------------------
 // OFFENCES
 router.get("/Offences", function (req, res, next) {

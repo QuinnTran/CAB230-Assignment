@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 
 export let JWT = "null";
-// let JWT ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxNTA3MiwiZW1haWwiOiJkZW1vLXVzZXJAZ21haWwuY29tIn0sImlhdCI6MTU1ODY4NTI0NCwiZXhwIjoxNTU4NzcxNjQ0fQ.MIClK3F-7zS8IDiGcgKTdmm30G4AkOtHaGN1_shFOyc";
 
 export default function Log() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  console.log(JWT);
+  console.log(JWT)
   return (
     <div className="container">
         <h2>Welcome, please sign in!</h2>
@@ -46,21 +45,40 @@ export default function Log() {
 }
 
 function logBtn(email, password) {
-  return fetch("https://cab230.hackhouse.sh/login", {
+  fetch("https://cab230.hackhouse.sh/login", {
     method: "POST",
-    body: `username=${email}&password=${password}`,
+    body: JSON.stringify (
+      {"username": email,
+      "password": password}
+    ),
     headers: {
       "Content-type": "application/x-www-form-urlencoded"
     }
   })
-    .then(res => res.json())
-    .then(function(res) {
-      window.JWT = res.token;
+    // .then(res => res.json())
+    // .then(result => {
+    //   result = JSON.stringify(result);
+    //   window.JWT = result.token;
+    // })
+    // .catch(function(error) {
+    //   console.log(
+    //     "There has been a problem with your fetch operation: ",
+    //     error.message
+    //   );
+    // });    
+    .then(function(response) {
+      if (response.ok) {
+          return response.json();
+      }
+      throw new Error("Network response was not ok.");
+    })
+    .then(function(result) {
+        let appDiv = document.getElementById("app");
+        appDiv.innerHTML = JSON.stringify(result);
+      window.JWT = result.token;
     })
     .catch(function(error) {
-      console.log(
-        "There has been a problem with your fetch operation: ",
-        error.message
-      );
+        console.log("There has been a problem with your fetch operation: ",error.message);
     });
+
 }  

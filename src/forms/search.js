@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
-// import {JWT} from "./log";
+import {JWT} from "./log";
 
-let JWT ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxNTA3MiwiZW1haWwiOiJkZW1vLXVzZXJAZ21haWwuY29tIn0sImlhdCI6MTU1ODY4NTI0NCwiZXhwIjoxNTU4NzcxNjQ0fQ.MIClK3F-7zS8IDiGcgKTdmm30G4AkOtHaGN1_shFOyc";
 
 export default function Ser(){
   const [search, setSearch] = useState("");

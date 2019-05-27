@@ -23,7 +23,6 @@
                 "summary":"Registers a new user account.",
                 "description":"Registers a new user account",
                 "operationId":"userRegister",
-                "produces":["application/json"],
                 "parameters":[{
                     "name":"column",
                     "in":"path",
@@ -31,12 +30,13 @@
                     "required":true,
                     "schema":{
                         "type":"string",
-                        "example":"email: demo-user@gmail.com, password: demouserpassword"
+                        "example":"email: demo-@gmail.com, password: demopassword"                   
                     }
                 }],
                 "responses":{
                     "201":{
                         "description":"Created",
+                        "produces":["application/json"],
                         "schema":{
                             "type":"object",
                             "properties":{
@@ -181,67 +181,123 @@
         },
         "/search":{ 
             "get":{
-                    "tags":["Search"],
-                    "summary":"Search for Offence data.",
-                    "description":"Search for Offence data",
-                    "operationId":"listSearch",
-                    "produces":["application/json"],
-                    "parameters":[{
-                        "name":"column",
-                        "in":"path",
-                        "description":"Search for Offence data.",
-                        "required":true,
+                "tags":["Search"],
+                "description":"Search for Offence data",
+                "operationId":"listSearch",
+                "produces":["application/json"],
+                "parameters":[
+                    {
+                        "in":"query",
+                        "name":"Offences",
+                        "type":"string",
+                        "required": true,
+                        "description":"Name of the Offence to search for."
+                    },
+                    {
+                        "in":"query",
+                        "name":"area",
+                        "type":"string",
+                        "required": true,
+                        "description":"List of comma-separated Areas (LGAs) to filter search results by"
+                    },
+                    {
+                        "in":"query",
+                        "name":"age",
+                        "type":"string",
+                        "required": true,
+                        "description":"List of comma-separated Ages to filter search results by"
+                    }, 
+                    {
+                        "in":"query",
+                        "name":"gender",
+                        "type":"string",
+                        "required": true,
+                        "description":"List of comma-separated Genders to filter search results by"
+                    },
+                    {
+                        "in":"query",
+                        "name":"year",
+                        "type":"string",
+                        "required": true,
+                        "description":"List of comma-separated Years to filter search results by"
+                    },
+                    {
+                        "in":"query",
+                        "name":"month",
+                        "type":"string",
+                        "required": true,
+                        "description":"List of comma-separated Months to filter search results by (1-12)"
+                    }
+                ],
+                "responses":{
+                    "200":{
+                        "description":"OK",
                         "schema":{
-                            "type":"string",
-                            "example":"homicidemurder"
-                        }
-                    }],
-                    "responses":{
-                        "200":{
-                            "description":"successful operation",
-                            "schema":{
-                                "type":"object",
-                                "properties":{
-                                    "Error":{
-                                        "type":"string",
-                                        "enum":["true","false"]
-                                    },
-                                    "Message":{
-                                        "type":"string",
-                                        "enum":["Success","Failure"]
-                                    },
-                                    "Offences":{
-                                        "type":"array",
-                                        "items":{
-                                            "type":"object",
-                                            "properties":{
-                                                "Offence":{
-                                                    "type":"string"
-                                                },
-                                                "Area":{
-                                                    "type":"string"
-                                                },
-                                                "Age":{
-                                                    "type":"string"
-                                                },
-                                                "Gender":{
-                                                    "type":"string"
-                                                },
-                                                "Year":{
-                                                    "type":"integer"
-                                                },
-                                                "Month":{
-                                                    "type":"integer"
-                                                }
-                                            }
-                                        }
-                                    }
+                            "type":"object",
+                            "properties":{
+                                "Error":{
+                                    "type":"string",
+                                    "enum":["true","false"]
+                                },
+                                "Message":{
+                                    "type":"string",
+                                    "enum":["Success","Failure"]
                                 }
+                            },
+                            "Examples":{
+                                "query": {
+                                    "offence": "Homicide (Murder)"
+                                },
+                                "result": [{
+                                    "LGA": "Aurukun Shire Council",
+                                    "total": 4,
+                                    "lat": -27.470812,
+                                    "lng": 153.022455
+                                }]
+                            }
+                        }
+                    },
+                    "400":{
+                        "description":"Bad Request",
+                        "schema":{
+                            "type":"object",
+                            "properties":{
+                                "Error":{
+                                    "type":"string",
+                                    "enum":["true","false"]
+                                },
+                                "Message":{
+                                    "type":"string",
+                                    "enum":["Success","Failure"]
+                                }
+                            },
+                            "Examples":{
+                                "message": "oops! it looks like you're missing the offence query parm"
+                            }
+                        }
+                    },
+                    "401":{
+                        "description":"Unauthorized",
+                        "schema":{
+                            "type":"object",
+                            "properties":{
+                                "Error":{
+                                    "type":"string",
+                                    "enum":["true","false"]
+                                },
+                                "Message":{
+                                    "type":"string",
+                                    "enum":["Success","Failure"]
+                                }
+                            },
+                        "Examples":{
+                            "message": "oh no! it looks like your authorization token is invalid..."
                             }
                         }
                     }
                 }
-            },
+            }
+        },
         "/offences":{ 
             "get":{
                     "tags":["Helpers"],
@@ -274,20 +330,20 @@
                                             }
                                         }
                                     },
-                                    "Example value" : {
-                                        "offences":{
-                                            "properties":{
-                                                "name":{
-                                                    "description":"Advertising Prostitution, Armed Robbery" 
-                                                }
-                                            }
+                            "examples" : {
+                                "offences":{
+                                    "properties":{
+                                        "name":{
+                                            "description":"Advertising Prostitution, Armed Robbery" 
                                         }
                                     }
                                 }
                             }
+                            }
                         }
                     }
                 }
+            }
         },
         "/areas":{ 
             "get":{
@@ -403,13 +459,14 @@
                     }
                 }
         },
-        "/years":{ 
+        "/years":{
             "get":{
                     "tags":["Helpers"],
                     "summary":"List of years",
                     "description":"Full listing of years",
                     "operationId":"listYears",
                     "produces":["application/json"],
+                    "parameters":{},
                     "responses":{
                         "200":{
                             "description":"OK",
@@ -424,22 +481,60 @@
                                         "type":"string",
                                         "enum":["Success","Failure"]
                                     },
-                                    "offences":{
-                                        "type":"array",
-                                        "items":{
-                                            "type":"object",
-                                            "properties":{
-                                                "Year":{
-                                                    "type":"string"
-                                                }
-                                            }
-                                        }
-                                    }
+                                    "Year":{
+                                        "type":"array"
+                                    } 
                                 }
+                            },
+                            "example":{
+                                "offences":[
+                                    2001,2002
+                                ]
                             }
                         }
                     }
                 }
-        }
+            }
+    },
+    "definitions":{
+        "DemoRegister":{
+        "type": "object",
+        "required":{
+            "id"
+            "name"
+            "manufacturer"
+            "releaseDate"
+        },    
+        "properties":{
+                id:
+                type: string
+                format: uuid
+                example: d290f1ee-6c54-4b01-90e6-d701748f0851
+            name:
+                type: string
+                example: Widget Adapter
+            releaseDate:
+                type: string
+                format: date-time
+                example: 2016-08-29T09:12:33.001Z
+            manufacturer:
+                $ref: '#/definitions/Manufacturer'
         }
     }
+    
+    
+  Manufacturer:
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        example: ACME Corporation
+      homePage:
+        type: string
+        format: url
+        example:  https://www.acme-corp.com
+      phone:
+        type: string
+        example: 408-867-5309
+}

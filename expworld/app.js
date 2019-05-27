@@ -11,6 +11,16 @@ const swaggerDocument = require('./swagger.json');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const helmet = require('helmet');
+const cors = require('cors');
+
+// const fs = require('fs');
+// const https = require('https');
+// const privateKey = fs.readFileSync('./sslcert/cert.key','utf8');
+// const certificate = fs.readFileSync('./sslcert/cert.pem','utf8');
+// const credentials = {
+//  key: privateKey,
+//  cert: certificate
+// };
 
 const app = express();
 // view engine setup
@@ -23,7 +33,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
+app.use(logger('common'));
 app.use(helmet());
+app.use(cors());
+
 
 // Knex
 app.use((req, res, next) => {
@@ -58,5 +71,8 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// const server = https.createServer(credentials,app);
+// server.listen(443); 
 
 module.exports = app;
