@@ -1,6 +1,6 @@
 var express = require('express');
 const mysql = require('mysql');
-var bcrypt= require("bcrypt")
+var bcrypt = require("bcrypt")
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 
@@ -13,18 +13,18 @@ router.get('/', function (req, res, next) {
 router.post('/register', function (req, res, next) {
   const password = bcrypt.hashSync(req.body.password, 5);
   var today = new Date();
-  var users={
-    "email":req.body.email,
-    "password":password,
-    "created_at":today,
-    "updated_at":today
+  var users = {
+    "email": req.body.email,
+    "password": password,
+    "created_at": today,
+    "updated_at": today
   }
 
   req.db.from('users').insert(users)
     .then(res.send({
-      "code":200,
-      "success":"user registered sucessfully",
-      "password":password
+      "code": 200,
+      "success": "user registered sucessfully",
+      "password": password
     }))
     .catch((err) => {
       console.log(err);
@@ -33,69 +33,183 @@ router.post('/register', function (req, res, next) {
 });
 
 router.post('/login', function (req, res, next) {
-  var email= req.body.email;
+  var email = req.body.email;
   var password = req.body.password;
-  req.db.from('users').select("password").where({email: email})
-  .then(row => row[0].password)
-  .then(passDB =>{
-    if(bcrypt.compareSync(password, passDB)){
-      var expire = Math.floor(Date.now() / 1000) + (60 * 60);
-      // -----ASSIGNED JWT-----
-      var token = jwt.sign({ user: email, exp: expire, time: Date.now()}, 'shhhhh');
-      res.send({
-        message: 'Authentication successful!',
-        "Token type": "Bearer",
-        token: token,
-        access_token: token,
-        expires_in: expire
-      });
-    }else{
-      res.send(401,"PASSWORD INCORRECT");
-    }
-  })
-  .catch((err) => {
-    console.log(err);
-    res.json({ "Error": true, "Message": "Error in MySQL query" })
-  })
+  req.db.from('users').select("password").where({ email: email })
+    .then(row => row[0].password)
+    .then(passDB => {
+      if (bcrypt.compareSync(password, passDB)) {
+        var expire = Math.floor(Date.now() / 1000) + (60 * 60);
+        // -----ASSIGNED JWT-----
+        var token = jwt.sign({ user: email, exp: expire, time: Date.now() }, 'shhhhh');
+        res.send({
+          access_token: token,
+          "Token type": "Bearer",
+          expires_in: expire
+        });
+      } else {
+        res.send(401, "PASSWORD INCORRECT");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json({ "Error": true, "Message": "Error in MySQL query" })
+    })
 });
 //--------------------------------- SEARCH-------------------------------
-router.get("/Search/:spec", function (req, res, next) {
-  let param = "";
-  let filter = "";
-  const userInput = "";
+router.get("/search?:query", function (req, res, next) {
+  const query = decodeURI(req.url).split("?")[1];
+  var filter = query.split("&"); //split filter using & (ex: search?offence=arson&area=winton)
+  var numFilters = 0;
+  var data = [];
 
-  if (param === "area") {
-    filter = "area=" + search;
-  } else if (param === "age") {
-    filter = "age=" + search;
-  } else if (param === "year") {
-    filter = "year=" + search;
+  //loop through every filters 
+  for (i of filter) {
+    ++numFilters;
   }
 
-  req.db
-  .from('offences', 'offence_columns')
-  .select('offence_columns.column','area', 'age', 'gender', 'year', 'month')
-  .where(year,'=',req.params.spec)
-  .then((rows) => {
-    var data =[];
-    for (row of rows){
-      data.push`[${rows[`pretty`]},${rows[`area`]},${rows[`age`]},${rows[`gender`]},${rows[`year`]},${rows[`year`]}]`
-    }
-    res.json({
-      data
-  })
-  .catch((err) => {
-  console.log(err);
-  res.json({"Error" : true, "Message" : "Error executing MySQL query"})
-  })
-  });
+  var values = [];
+  var filterArray = [];
+  var varArray = [];
+  //push data into array
+  for (var i = 0; i < numFilters; i++) {
+    values.push([]);
+    filterArray.push([]);
+    varArray.push([]);
+  }
+
+  for (var i = 0; i < numFilters; i++) {
+    var filterQuery = filter[i];
+    varArray[i] = filterQuery.split('=');
+    filterArray[i] = varArray[i][0];
+    values[i] = varArray[i][1].split(',');
+  }
+
+  if (numFilters == 1) {
+    req.db
+      .from('offences')
+      .select('area', 'age', 'gender', 'year', 'month')
+      .orderBy('year', 'asc')
+      .then((rows) => {
+        for (row of rows) {
+          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+        }
+        res.json({
+          data
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+      })
+  } else if (numFilters == 2) {
+    req.db
+      .from('offences')
+      .select('area', 'age', 'gender', 'year', 'month')
+      .where(filterArray[1], 'IN', values[1])
+      .orderBy('year', 'asc')
+      .then((rows) => {
+        for (row of rows) {
+          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+        }
+        res.json({
+          data
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+      })
+  } else if (numFilters == 3) {
+    req.db
+      .from('offences')
+      .select('area', 'age', 'gender', 'year', 'month')
+      .where(filterArray[1], 'IN', values[1])
+      .where(filterArray[2], 'IN', values[2])
+      .orderBy('year', 'asc')
+      .then((rows) => {
+        for (row of rows) {
+          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+        }
+        res.json({
+          data
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+      })
+  } else if (numFilters == 4) {
+    req.db
+      .from('offences')
+      .select('area', 'age', 'gender', 'year', 'month')
+      .where(filterArray[1], 'IN', values[1])
+      .where(filterArray[2], 'IN', values[2])
+      .where(filterArray[3], 'IN', values[3])
+      .orderBy('year', 'asc')
+      .then((rows) => {
+        for (row of rows) {
+          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+        }
+        res.json({
+          data
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+      })
+  } else if (numFilters == 5) {
+    req.db
+      .from('offences')
+      .select('area', 'age', 'gender', 'year', 'month')
+      .where(filterArray[1], 'IN', values[1])
+      .where(filterArray[2], 'IN', values[2])
+      .where(filterArray[3], 'IN', values[3])
+      .where(filterArray[4], 'IN', values[4])
+      .orderBy('year', 'asc')
+      .then((rows) => {
+        for (row of rows) {
+          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+        }
+        res.json({
+          data
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+      })
+  } else if (numFilters == 6) {
+    req.db
+      .from('offences')
+      .select('area', 'age', 'gender', 'year', 'month')
+      .where(filterArray[1], 'IN', values[1])
+      .where(filterArray[2], 'IN', values[2])
+      .where(filterArray[3], 'IN', values[3])
+      .where(filterArray[4], 'IN', values[4])
+      .where(filterArray[5], 'IN', values[5])
+      .orderBy('year', 'asc')
+      .then((rows) => {
+        for (row of rows) {
+          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+        }
+        res.json({
+          data
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+      })
+  }
 });
 //--------------------------------- HELPERS-------------------------------
 // OFFENCES
 router.get("/Offences", function (req, res, next) {
   req.db.from('offence_columns').select("pretty")
     .then((rows) => {
-      res.json({"Offences": rows.map(row => row.pretty) })
+      res.json({ "Offences": rows.map(row => row.pretty) })
     })
     .catch((err) => {
       console.log(err);
@@ -106,7 +220,7 @@ router.get("/Offences", function (req, res, next) {
 router.get("/Areas", function (req, res, next) {
   req.db.from('areas').select("area")
     .then((rows) => {
-      res.json({"Areas": rows.map(row => row.area)})
+      res.json({ "Areas": rows.map(row => row.area) })
     })
     .catch((err) => {
       console.log(err);
@@ -117,7 +231,7 @@ router.get("/Areas", function (req, res, next) {
 router.get("/Ages", function (req, res, next) {
   req.db.from('offences').select('age').distinct("age")
     .then((rows) => {
-      res.json({"Ages": rows.map(row => row.age)})
+      res.json({ "Ages": rows.map(row => row.age) })
     })
     .catch((err) => {
       console.log(err);
@@ -128,7 +242,7 @@ router.get("/Ages", function (req, res, next) {
 router.get("/Genders", function (req, res, next) {
   req.db.from('offences').select("gender").distinct("gender")
     .then((rows) => {
-      res.json({"Genders": rows.map(row => row.gender)})
+      res.json({ "Genders": rows.map(row => row.gender) })
     })
     .catch((err) => {
       console.log(err);
@@ -139,7 +253,7 @@ router.get("/Genders", function (req, res, next) {
 router.get("/Years", function (req, res, next) {
   req.db.from('offences').select("year").distinct("year")
     .then((rows) => {
-      res.json({"Years": rows.map(row => row.year)})
+      res.json({ "Years": rows.map(row => row.year) })
     })
     .catch((err) => {
       console.log(err);

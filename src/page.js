@@ -67,14 +67,14 @@ function OffencesPage() {
     </div>
   );
 }
+
 //SEARCH PAGE
 function SearchPage() {
-  return(
+  return (
     <div>
-      <h2>Search</h2>
-      <Ser />
+      <Ser/>
     </div>
-  )
+  );
 }
 
 export default Page;

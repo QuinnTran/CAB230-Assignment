@@ -1,37 +1,46 @@
-import React, {useState, useEffect} from 'react';
-import {JWT} from "./log";
+import React, { useState, useEffect } from 'react';
+import FilterBar from "../filter";
+import { JWT } from "./log";
 
 
-export default function Ser(){
+export default function Ser() {
   const [search, setSearch] = useState("");
-  const { loading, data, error } = useSearchBtn(search);
-  console.log(data);
+  const { loading, query, error } = useSearchBtn(search);
+  console.log(JWT);
+  console.log({ query });
+
   if (loading) {
     return <p>Loading...</p>;
   }
   if (error) {
     return <p>Something went wrong: {error.message}</p>;
   }
-  
+
   return (
     <div>
+      <div className="container">
+        <h2>Search</h2>
+        <SearchBar onSubmit={setSearch} />
+        <h2>Filter</h2>
+        <FilterBar onSubmit={setSearch} />
+      </div>
+      <hr />
       <h2>Result</h2>
-      <SearchBar onSubmit={setSearch} />
-      {data.map(value => 
-        <CreateTable 
-          offence={value.offence} 
-          lga={value.lga} 
-          total={value.total} 
-          lat={value.lat} 
-          lng={value.lng} 
+      {/* {query.map(value =>
+        <QueryTable
+          key={value.id}
+          lga={value.lga}
+          total={value.total}
+          lat={value.lat}
+          lng={value.lng}
         />
-      )}
+      )} */}
     </div>
   )
 }
 
-function CreateTable(props){
-  return(
+function QueryTable(props) {
+  return (
     <table>
       <tr>
         <td>Area</td>
@@ -49,8 +58,8 @@ function CreateTable(props){
   )
 }
 
-function SearchBar(props){
-  const [innerSearch, setInnerSearch] = useState("");
+function SearchBar() {
+  const [search, setSearch] = useState("");
   return (
     <div class>
       <label>Offence: </label>
@@ -59,43 +68,10 @@ function SearchBar(props){
         name="search"
         id="search"
         type="search"
-        value={innerSearch}
-        onChange={e => setInnerSearch(e.target.value)}
+        value={search}
+        onChange={e => setSearch(e.target.value)}
       />
-      <label>Area: </label>
-      <input
-        aria-labelledby="search-button"
-        name="area"
-        id="area"
-        type="area"
-        value={innerSearch}
-        onChange={e => setInnerSearch(e.target.value)}
-      />
-      <br></br><br></br>
-      <label>Age: </label>
-      <input
-        aria-labelledby="search-button"
-        name="age"
-        id="age"
-        type="age"
-        value={innerSearch}
-        onChange={e => setInnerSearch(e.target.value)}
-      />
-      <label>Year: </label>
-      <input
-        aria-labelledby="search-button"
-        name="year"
-        id="year"
-        type="year"
-        value={innerSearch}
-        onChange={e => setInnerSearch(e.target.value)}
-      />
-      <br></br><br></br>
-      <button
-        id="search-button"
-        type="button"
-        onClick={() => props.onSubmit(innerSearch)}
-      >
+      <button type="button" onClick={() => serBtn(search)}>
         Search
       </button>
     </div>
@@ -104,13 +80,12 @@ function SearchBar(props){
 
 function useSearchBtn(search) {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+  const [query, setQuery] = useState([]);
   const [error, setError] = useState(null);
-  console.log(data)
   useEffect(() => {
     serBtn(search)
-      .then(data => {
-        setData(data);
+      .then(query => {
+        setQuery(query);
         setLoading(false);
       })
       .catch(e => {
@@ -120,45 +95,36 @@ function useSearchBtn(search) {
   }, [search]);
   return {
     loading,
-    data,
+    query,
     error
   };
 }
 
 function serBtn(search) {
-  // let filter = "";
-  //   onsubmit = (event) =>{
-  //     const param = event.target.innerSearch;
-  //   };
-  
-  //    //Example filter strings
-  //   if (param === "area") {
-  //     filter = "area=" + search;
-  //   } else if (param === "age") {
-  //     filter = "age=" + search;
-  //   } else if (param === "year") {
-  //     filter = "year=" + search;
-  //   }
-
   //The parameters of the call
   let getParam = { method: "GET" };
   let head = { Authorization: `Bearer ${JWT}` };
   getParam.headers = head;
-  
-  //The URL
-  const query = "offence=" + search;
-  const url = "https://cab230.hackhouse.sh/search?" + query;
-  // const url = "https://cab230.hackhouse.sh/search?" + query + "&" + filter;
 
-  return (fetch(encodeURI(url), getParam)
+  //The URL
+  const input = "offence=" + search;
+  const url = "https://cab230.hackhouse.sh/search?" + input;
+  return fetch(encodeURI(url), getParam)
     .then(res => res.json())
-    .then(res => res.result)
-    .then(data => data.map(result => ({
-      offence: result.offence,
-      LGA: result.LGA,
-      total: result.total,
-      lat: result.lat,
-      lng: result.lng
-    })))
-  )
+    .then(res => res.results)
+    .then(results => {
+      results.map(result => ({
+        id: result.id,
+        LGA: result.LGA,
+        total: result.total,
+        lat: result.lat,
+        lng: result.lng
+      }))
+    })
+    .catch(function (error) {
+      console.log(
+        "There has been a problem with your fetch operation: ",
+        error.message
+      );
+    })
 }

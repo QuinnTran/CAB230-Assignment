@@ -1,540 +1,427 @@
-{ "openapi":"3.0.0",
-    "info":{ 
-        "title":"CAB230 : Web Computing API",
-        "description":"This API is to be used during development of assignments for the QUT CAB230 Web Computing Unit. If you have any issues, please comment on Slack.",
-        "version":"1.0.0",
-        "termsOfService":"http://swagger.io/terms/",
-        "contact":{"email":"j.hogan@qut.edu.au"},
-        "license":{
-            "name":"Apache 2.0",
-            "url":"http://www.apache.org/licenses/LICENSE-2.0.html"
-        } 
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "CAB230 : Web Computing API",
+        "description": "This API is to be used during development of assignments for the QUT CAB230 Web Computing Unit. If you have any issues, please comment on Slack.",
+        "version": "1.0.0",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "j.hogan@qut.edu.au"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
     },
-    "servers":[ 
+    "servers": [
         {
-            "url": "http://localhost:3000"
+            "url": "https://localhost"
         }
     ],
-    "basePath":"/",
-    "paths":{ 
-        "/register":{ 
-            "post":{
-                "tags":["Authentication"],
-                "summary":"Registers a new user account.",
-                "description":"Registers a new user account",
-                "operationId":"userRegister",
-                "parameters":[{
-                    "name":"column",
-                    "in":"path",
-                    "description":"taking email and password for a new user.",
-                    "required":true,
-                    "schema":{
-                        "type":"string",
-                        "example":"email: demo-@gmail.com, password: demopassword"                   
-                    }
-                }],
-                "responses":{
-                    "201":{
-                        "description":"Created",
-                        "produces":["application/json"],
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "Error":{
-                                    "type":"string",
-                                    "enum":["true","false"]
-                                },
-                                "Message":{
-                                    "type":"string",
-                                    "description":["yay! you've successfully registered your user account :)"]
-                                },
-                                "Users":{
-                                    "type":"array",
-                                    "items":{
-                                        "type":"object",
-                                        "properties":{
-                                            "email":{
-                                                "type":"string"
-                                            },
-                                            "password":{
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "Authentication"
+        },
+        {
+            "name": "Search"
+        },
+        {
+            "name": "Helpers"
+        }
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Registers a new user account.",
+                "description": "Registers a new user account",
+                "operationId": "userRegister",
+                "produces": [
+                    "application/json"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/JSON": {
+                            "schema": {
+                                "example": {
+                                    "email": "demo-user@gmail.com",
+                                    "password": "demouserpassword"
                                 }
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/REG201"
+                        }
                     },
-                    "400":{
-                        "description":"Bad Request",
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "Error":{
-                                    "type":"string",
-                                    "enum":["true","false"]
-                                },
-                                "Message":{
-                                    "type":"string",
-                                    "description":["oops! It looks like that user already exists :("]
-                                },
-                                "Offences":{
-                                    "type":"array",
-                                    "items":{
-                                        "type":"object",
-                                        "properties":{
-                                            "email":{
-                                                "type":"string"
-                                            },
-                                            "password":{
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/REG400"
                         }
                     }
                 }
             }
         },
-        "/login":{ 
-            "post":{
-                "tags":["Authentication"],
-                "summary":"Login with an existing user account.",
-                "description":"Login with an existing user account",
-                "operationId":"userLogin",
-                "produces":["application/json"],
-                "parameters":[{
-                    "name":"column",
-                    "in":"path",
-                    "description":"taking username and password for an existing user.",
-                    "required":true,
-                    "schema":{
-                        "type":"string",
-                        "example":"email: demo-user@gmail.com, password: demouserpassword"
-                    }
-                }],
-                "responses":{
-                    "201":{
-                        "description":"Created",
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "Error":{
-                                    "type":"string",
-                                    "enum":["true","false"]
-                                },
-                                "Message":{
-                                    "type":"string",
-                                    "description":["yay! you've successfully registered your user account :)"]
-                                },
-                                "Users":{
-                                    "type":"array",
-                                    "items":{
-                                        "type":"object",
-                                        "properties":{
-                                            "email":{
-                                                "type":"string"
-                                            },
-                                            "password":{
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+        "/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login with an existing user account.",
+                "description": "Login with an existing user account",
+                "operationId": "userLogin",
+                "produces": [
+                    "application/json"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/JSON": {
+                            "schema": {
+                                "example": {
+                                    "email": "demo-user@gmail.com",
+                                    "password": "demouserpassword"
                                 }
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Created",
+                        "produces": [
+                            "application/json"
+                        ],
+                        "schema": {
+                            "$ref": "#/definitions/RES200"
+                        }
                     },
-                    "400":{
-                        "description":"Bad Request",
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "Error":{
-                                    "type":"string",
-                                    "enum":["true","false"]
-                                },
-                                "Message":{
-                                    "type":"string",
-                                    "description":["oops! It looks like that user already exists :("]
-                                },
-                                "Offences":{
-                                    "type":"array",
-                                    "items":{
-                                        "type":"object",
-                                        "properties":{
-                                            "username":{
-                                                "type":"string"
-                                            },
-                                            "password":{
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                    "401": {
+                        "description": "Bad Request",
+                        "produces": [
+                            "application/json"
+                        ],
+                        "schema": {
+                            "$ref": "#/definitions/LOG401"
                         }
                     }
                 }
             }
         },
-        "/search":{ 
-            "get":{
-                "tags":["Search"],
-                "description":"Search for Offence data",
-                "operationId":"listSearch",
-                "produces":["application/json"],
-                "parameters":[
+        "/search": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "description": "Search for Offence data",
+                "operationId": "listSearch",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
                     {
-                        "in":"query",
-                        "name":"Offences",
-                        "type":"string",
+                        "in": "query",
+                        "name": "Offences",
+                        "type": "string",
                         "required": true,
-                        "description":"Name of the Offence to search for."
+                        "description": "Name of the Offence to search for."
                     },
                     {
-                        "in":"query",
-                        "name":"area",
-                        "type":"string",
+                        "in": "query",
+                        "name": "area",
+                        "type": "string",
                         "required": true,
-                        "description":"List of comma-separated Areas (LGAs) to filter search results by"
+                        "description": "List of comma-separated Areas (LGAs) to filter search results by"
                     },
                     {
-                        "in":"query",
-                        "name":"age",
-                        "type":"string",
+                        "in": "query",
+                        "name": "age",
+                        "type": "string",
                         "required": true,
-                        "description":"List of comma-separated Ages to filter search results by"
-                    }, 
-                    {
-                        "in":"query",
-                        "name":"gender",
-                        "type":"string",
-                        "required": true,
-                        "description":"List of comma-separated Genders to filter search results by"
+                        "description": "List of comma-separated Ages to filter search results by"
                     },
                     {
-                        "in":"query",
-                        "name":"year",
-                        "type":"string",
+                        "in": "query",
+                        "name": "gender",
+                        "type": "string",
                         "required": true,
-                        "description":"List of comma-separated Years to filter search results by"
+                        "description": "List of comma-separated Genders to filter search results by"
                     },
                     {
-                        "in":"query",
-                        "name":"month",
-                        "type":"string",
+                        "in": "query",
+                        "name": "year",
+                        "type": "string",
                         "required": true,
-                        "description":"List of comma-separated Months to filter search results by (1-12)"
+                        "description": "List of comma-separated Years to filter search results by"
+                    },
+                    {
+                        "in": "query",
+                        "name": "month",
+                        "type": "string",
+                        "required": true,
+                        "description": "List of comma-separated Months to filter search results by (1-12)"
                     }
                 ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "Error":{
-                                    "type":"string",
-                                    "enum":["true","false"]
-                                },
-                                "Message":{
-                                    "type":"string",
-                                    "enum":["Success","Failure"]
-                                }
-                            },
-                            "Examples":{
-                                "query": {
-                                    "offence": "Homicide (Murder)"
-                                },
-                                "result": [{
-                                    "LGA": "Aurukun Shire Council",
-                                    "total": 4,
-                                    "lat": -27.470812,
-                                    "lng": 153.022455
-                                }]
+                "responses": {
+                    "responses": {
+                        "200": {
+                            "description": "OK",
+                            "produces": [
+                                "application/json"
+                            ],
+                            "schema": {
+                                "$ref": "#/definitions/SER200"
+                            }
+                        },
+                        "400": {
+                            "description": "Bad Request",
+                            "produces": [
+                                "application/json"
+                            ],
+                            "schema": {
+                                "$ref": "#/definitions/SER400"
+                            }
+                        },
+                        "401": {
+                            "description": "Unauthorized",
+                            "produces": [
+                                "application/json"
+                            ],
+                            "schema": {
+                                "$ref": "#/definitions/SER401"
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/offences": {
+            "get": {
+                "tags": [
+                    "Helpers"
+                ],
+                "summary": "List of offences",
+                "description": "Full listing of offences",
+                "operationId": "listOffences",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "produces": [
+                            "application/json"
+                        ],
+                        "schema": {
+                            "$ref": "#/definitions/OFF200"
+                        }
+                    }
+                }
+            }
+        },
+        "/areas": {
+            "get": {
+                "tags": [
+                    "Helpers"
+                ],
+                "summary": "List of areas",
+                "description": "Full listing of areas",
+                "operationId": "listAreas",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "produces": [
+                            "application/json"
+                        ],
+                        "schema": {
+                            "$ref": "#/definitions/AREA200"
+                        }
+                    }
+                }
+            }
+        },
+        "/ages": {
+            "get": {
+                "tags": [
+                    "Helpers"
+                ],
+                "summary": "List of ages",
+                "description": "Full listing of ages",
+                "operationId": "listAges",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "produces": [
+                            "application/json"
+                        ],
+                        "schema": {
+                            "$ref": "#/definitions/AGE200"
+                        }
+                    }
+                }
+            }
+        },
+        "/genders": {
+            "get": {
+                "tags": [
+                    "Helpers"
+                ],
+                "summary": "List of genders",
+                "description": "Full listing of genders",
+                "operationId": "listGenders",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "produces": [
+                            "application/json"
+                        ],
+                        "schema": {
+                            "$ref": "#/definitions/GEN200"
+                        }
+                    }
+                }
+            }
+        },
+        "/years": {
+            "get": {
+                "tags": [
+                    "Helpers"
+                ],
+                "summary": "List of years",
+                "description": "Full listing of years",
+                "operationId": "listYears",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": {},
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "produces": [
+                            "application/json"
+                        ],
+                        "schema": {
+                            "$ref": "#/definitions/YEAR200"
+                        }
+                    }
+                }
+            }
+        },
+        "definitions": {
+            "REG201": {
+                "type": "object",
+                "properties": {
+                    "message": "yay! you've successfully registered your user account :)"
+                }
+            },
+            "REG400": {
+                "type": "object",
+                "properties": {
+                    "message": "oops! It looks like that user already exists :("
+                }
+            },
+            "LOG200": {
+                "type": "object",
+                "properties": {
+                    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo1Nzg2LCJlbWFpbCI6ImRlbW8xMjM0QGdtYWlsLmNvbSJ9LCJpYXQiOjE1NTUzMjQ2MDIsImV4cCI6MTU1NTQxMTAwMn0.mo85iKuAQ_h8n8-6pkeNNs5CCnV0G8hScxhi_ml_Q6c",
+                    "token_type": "Bearer",
+                    "expires_in": 86400
+                }
+            },
+            "LOG401": {
+                "type": "object",
+                "properties": {
+                    "message": "invalid login - bad password"
+                }
+            },
+            "SER200": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "offence": "Homicide (Murder)"
                     },
-                    "400":{
-                        "description":"Bad Request",
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "Error":{
-                                    "type":"string",
-                                    "enum":["true","false"]
-                                },
-                                "Message":{
-                                    "type":"string",
-                                    "enum":["Success","Failure"]
-                                }
-                            },
-                            "Examples":{
-                                "message": "oops! it looks like you're missing the offence query parm"
-                            }
+                    "result": [
+                        {
+                            "LGA": "Aurukun Shire Council",
+                            "total": 4,
+                            "lat": -27.470812,
+                            "lng": 153.022455
                         }
-                    },
-                    "401":{
-                        "description":"Unauthorized",
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "Error":{
-                                    "type":"string",
-                                    "enum":["true","false"]
-                                },
-                                "Message":{
-                                    "type":"string",
-                                    "enum":["Success","Failure"]
-                                }
-                            },
-                        "Examples":{
-                            "message": "oh no! it looks like your authorization token is invalid..."
-                            }
-                        }
-                    }
+                    ]
+                }
+            },
+            "SER400": {
+                "type": "object",
+                "properties": {
+                    "message": "oops! it looks like you're missing the offence query parm"
+                }
+            },
+            "SER401": {
+                "type": "object",
+                "properties": {
+                    "message": "oh no! it looks like your authorization token is invalid..."
+                }
+            },
+            "OFF200": {
+                "type": "object",
+                "properties": {
+                    "offences": [
+                        "Advertising Prostitution",
+                        "Armed Robbery"
+                    ]
+                }
+            },
+            "AREA200": {
+                "type": "object",
+                "properties": {
+                    "offences": [
+                        "Aurukun Shire Council",
+                        "Balonne Shire Council"
+                    ]
+                }
+            },
+            "AGE200": {
+                "type": "object",
+                "properties": {
+                    "ages": [
+                        "Adult",
+                        "Juvenile"
+                    ]
+                }
+            },
+            "GEN200": {
+                "type": "object",
+                "properties": {
+                    "offences": [
+                        "Female",
+                        "Male"
+                    ]
+                }
+            },
+            "YEAR200": {
+                "type": "object",
+                "properties": {
+                    "offences": [
+                        2001,
+                        2002
+                    ]
                 }
             }
-        },
-        "/offences":{ 
-            "get":{
-                    "tags":["Helpers"],
-                    "summary":"List of offences",
-                    "description":"Full listing of offences",
-                    "operationId":"listOffences",
-                    "responses":{
-                        "200":{
-                            "description":"ok",
-                            "produces":["application/json"],
-                            "schema":{
-                                "type":"object",
-                                "properties":{
-                                    "Error":{
-                                        "type":"string",
-                                        "enum":["true","false"]
-                                    },
-                                    "Message":{
-                                        "type":"string",
-                                        "enum":["Success","Failure"]
-                                    },
-                                    "offences":{
-                                        "type":"array",
-                                        "items":{
-                                            "type":"object",
-                                            "properties":{
-                                                "name":{
-                                                    "type":"string"
-                                                }
-                                            }
-                                        }
-                                    },
-                            "examples" : {
-                                "offences":{
-                                    "properties":{
-                                        "name":{
-                                            "description":"Advertising Prostitution, Armed Robbery" 
-                                        }
-                                    }
-                                }
-                            }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/areas":{ 
-            "get":{
-                    "tags":["Helpers"],
-                    "summary":"List of areas",
-                    "description":"Full listing of areas",
-                    "operationId":"listAreas",
-                    "produces":["application/json"],
-                    "responses":{
-                        "200":{
-                            "description":"OK",
-                            "schema":{
-                                "type":"object",
-                                "properties":{
-                                    "Error":{
-                                        "type":"string",
-                                        "enum":["true","false"]
-                                    },
-                                    "Message":{
-                                        "type":"string",
-                                        "enum":["Success","Failure"]
-                                    },
-                                    "offences":{
-                                        "type":"array",
-                                        "items":{
-                                            "type":"object",
-                                            "properties":{
-                                                "Area":{
-                                                    "type":"string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-        },
-        "/ages":{ 
-            "get":{
-                    "tags":["Helpers"],
-                    "summary":"List of ages",
-                    "description":"Full listing of ages",
-                    "operationId":"listAges",
-                    "produces":["application/json"],
-                    "responses":{
-                        "200":{
-                            "description":"OK",
-                            "schema":{
-                                "type":"object",
-                                "properties":{
-                                    "Error":{
-                                        "type":"string",
-                                        "enum":["true","false"]
-                                    },
-                                    "Message":{
-                                        "type":"string",
-                                        "enum":["Success","Failure"]
-                                    },
-                                    "offences":{
-                                        "type":"array",
-                                        "items":{
-                                            "type":"object",
-                                            "properties":{
-                                                "Age":{
-                                                    "type":"string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-        },
-        "/genders":{ 
-            "get":{
-                    "tags":["Helpers"],
-                    "summary":"List of genders",
-                    "description":"Full listing of genders",
-                    "operationId":"listGenders",
-                    "produces":["application/json"],
-                    "responses":{
-                        "200":{
-                            "description":"OK",
-                            "schema":{
-                                "type":"object",
-                                "properties":{
-                                    "Error":{
-                                        "type":"string",
-                                        "enum":["true","false"]
-                                    },
-                                    "Message":{
-                                        "type":"string",
-                                        "enum":["Success","Failure"]
-                                    },
-                                    "offences":{
-                                        "type":"array",
-                                        "items":{
-                                            "type":"object",
-                                            "properties":{
-                                                "Gender":{
-                                                    "type":"string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-        },
-        "/years":{
-            "get":{
-                    "tags":["Helpers"],
-                    "summary":"List of years",
-                    "description":"Full listing of years",
-                    "operationId":"listYears",
-                    "produces":["application/json"],
-                    "parameters":{},
-                    "responses":{
-                        "200":{
-                            "description":"OK",
-                            "schema":{
-                                "type":"object",
-                                "properties":{
-                                    "Error":{
-                                        "type":"string",
-                                        "enum":["true","false"]
-                                    },
-                                    "Message":{
-                                        "type":"string",
-                                        "enum":["Success","Failure"]
-                                    },
-                                    "Year":{
-                                        "type":"array"
-                                    } 
-                                }
-                            },
-                            "example":{
-                                "offences":[
-                                    2001,2002
-                                ]
-                            }
-                        }
-                    }
-                }
-            }
-    },
-    "definitions":{
-        "DemoRegister":{
-        "type": "object",
-        "required":{
-            "id"
-            "name"
-            "manufacturer"
-            "releaseDate"
-        },    
-        "properties":{
-                id:
-                type: string
-                format: uuid
-                example: d290f1ee-6c54-4b01-90e6-d701748f0851
-            name:
-                type: string
-                example: Widget Adapter
-            releaseDate:
-                type: string
-                format: date-time
-                example: 2016-08-29T09:12:33.001Z
-            manufacturer:
-                $ref: '#/definitions/Manufacturer'
         }
     }
-    
-    
-  Manufacturer:
-    required:
-    - name
-    properties:
-      name:
-        type: string
-        example: ACME Corporation
-      homePage:
-        type: string
-        format: url
-        example:  https://www.acme-corp.com
-      phone:
-        type: string
-        example: 408-867-5309
 }
