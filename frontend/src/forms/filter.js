@@ -14,7 +14,7 @@ export default function FilterBar() {
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
-
+      <br></br>
       <label>Age: </label>
       <input
         aria-labelledby="area-button"
@@ -24,7 +24,7 @@ export default function FilterBar() {
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
-
+      <br></br>
       <label>Gender: </label>
       <input
         aria-labelledby="gender-button"
@@ -34,7 +34,7 @@ export default function FilterBar() {
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
-
+      <br></br>
       <label>Year: </label>
       <input
         aria-labelledby="year-button"

@@ -36,7 +36,7 @@ export default function Log() {
           }}
         />
         <br></br><br></br>
-        <button type="submit" onClick={() => logBtn(email, password)}>Login</button>
+        <button onClick={() => logBtn(email, password)}>Login</button>
       </form>
     </div>
   );
