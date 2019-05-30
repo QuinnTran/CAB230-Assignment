@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import FilterBar from "../filter";
-import { JWT } from "./log";
-
+import { serBtn } from "../api"
 
 export default function Ser() {
   const [search, setSearch] = useState("");
   const { loading, query, error } = useSearchBtn(search);
-  console.log(JWT);
   console.log({ query });
 
   if (loading) {
@@ -98,33 +96,4 @@ function useSearchBtn(search) {
     query,
     error
   };
-}
-
-function serBtn(search) {
-  //The parameters of the call
-  let getParam = { method: "GET" };
-  let head = { Authorization: `Bearer ${JWT}` };
-  getParam.headers = head;
-
-  //The URL
-  const input = "offence=" + search;
-  const url = "https://cab230.hackhouse.sh/search?" + input;
-  return fetch(encodeURI(url), getParam)
-    .then(res => res.json())
-    .then(res => res.results)
-    .then(results => {
-      results.map(result => ({
-        id: result.id,
-        LGA: result.LGA,
-        total: result.total,
-        lat: result.lat,
-        lng: result.lng
-      }))
-    })
-    .catch(function (error) {
-      console.log(
-        "There has been a problem with your fetch operation: ",
-        error.message
-      );
-    })
 }

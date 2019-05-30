@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-
-export let JWT = "null";
+import { logBtn } from "../api";
 
 export default function Log() {
   const [email, setEmail] = useState("");
@@ -42,24 +41,3 @@ export default function Log() {
     </div>
   );
 }
-
-function logBtn(email, password) {
-  return fetch("https://cab230.hackhouse.sh/login", {
-    method: "POST",
-    body: `email=${email}&password=${password}`,
-    headers: {
-      "Content-type": "application/x-www-form-urlencoded"
-    }
-  })
-    .then(res => res.json())
-    .then(result => {
-      result = JSON.stringify(result);
-      window.JWT = result.token;
-    })
-    .catch(function (error) {
-      console.log(
-        "There has been a problem with your fetch operation: ",
-        error.message
-      );
-    });
-}  
