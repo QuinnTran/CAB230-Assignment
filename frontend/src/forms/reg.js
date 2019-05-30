@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { regBtn } from "../api"
 
-export default function Reg () {
+export default function Reg() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
@@ -33,28 +34,10 @@ export default function Reg () {
             const { value } = event.target;
             setPassword(value);
           }}
-         />
+        />
         <br></br><br></br>
-        <button type ="submit" onClick={() => regBtn(email, password)}>Register</button>
+        <button type="submit" onClick={() => regBtn(email, password)}>Register</button>
       </form>
     </div>
   );
-}
-
-
-function regBtn(email, password) {
-  return fetch("https://cab230.hackhouse.sh/register", {
-    method: "POST",
-    body: `email=${email}&password=${password}`,
-    headers: {
-      "Content-type": "application/x-www-form-urlencoded"
-    }
-  })
-  .then(res => res.json())
-  .catch(function(error) {
-    console.log(
-      "There has been a problem with your fetch operation: ",
-      error.message
-    );
-  });
 }

@@ -24,7 +24,7 @@ export default function Ser() {
       </div>
       <hr />
       <h2>Result</h2>
-      {/* {query.map(value =>
+      {query.map(value =>
         <QueryTable
           key={value.id}
           lga={value.lga}
@@ -32,7 +32,7 @@ export default function Ser() {
           lat={value.lat}
           lng={value.lng}
         />
-      )} */}
+      )}
     </div>
   )
 }

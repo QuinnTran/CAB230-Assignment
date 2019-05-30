@@ -1,6 +1,23 @@
 
 export let JWT = "null";
 
+export function regBtn(email, password) {
+    return fetch("https://cab230.hackhouse.sh/register", {
+        method: "POST",
+        body: `email=${email}&password=${password}`,
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded"
+        }
+    })
+        .then(res => res.json())
+        .catch(function (error) {
+            console.log(
+                "There has been a problem with your fetch operation: ",
+                error.message
+            );
+        });
+}
+
 export function logBtn(email, password) {
     return fetch("https://cab230.hackhouse.sh/login", {
         method: "POST",
