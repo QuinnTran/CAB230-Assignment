@@ -62,7 +62,19 @@ router.get("/search?:query", function (req, res, next) {
   var filter = query.split("&"); //split filter using & (ex: search?offence=arson&area=winton)
   var numFilters = 0;
   var data = [];
+  var column = req.query.offence.split("").join("").toLowerCase();
 
+  //Show error if token is not match with login token
+  try {
+    var decoded = jwt.verify(token, 'root');
+  }
+  catch (err) {
+    console.log(err);
+    res.json({
+      "Error": true,
+      "Message": "Token is not match"
+    })
+  }
   //loop through every filters 
   for (i of filter) {
     ++numFilters;
@@ -71,8 +83,8 @@ router.get("/search?:query", function (req, res, next) {
   var values = [];
   var filterArray = [];
   var varArray = [];
-  //push data into array
-  for (var i = 0; i < numFilters; i++) {
+
+  for (var i = 0; i < numFilters; i++) { //push data into array
     values.push([]);
     filterArray.push([]);
     varArray.push([]);
@@ -88,11 +100,14 @@ router.get("/search?:query", function (req, res, next) {
   if (numFilters == 1) {
     req.db
       .from('offences')
-      .select('area', 'age', 'gender', 'year', 'month')
-      .orderBy('year', 'asc')
+      .select('offences.area as LGA')
+      .sum(`${column} as total`)
+      .select('areas.lat', 'areas.lng')
+      .join('areas', 'areas.area', '=', 'offences.area')
+      .groupBy('offences.area')
       .then((rows) => {
         for (row of rows) {
-          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
         }
         res.json({
           data
@@ -102,15 +117,20 @@ router.get("/search?:query", function (req, res, next) {
         console.log(err);
         res.json({ "Error": true, "Message": "Error executing MySQL query" })
       })
+
   } else if (numFilters == 2) {
     req.db
+    req.db
       .from('offences')
-      .select('area', 'age', 'gender', 'year', 'month')
+      .select('offences.area as LGA')
       .where(filterArray[1], 'IN', values[1])
-      .orderBy('year', 'asc')
+      .sum(`${column} as total`)
+      .select('areas.lat', 'areas.lng')
+      .join('areas', 'areas.area', '=', 'offences.area')
+      .groupBy('offences.area')
       .then((rows) => {
         for (row of rows) {
-          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
         }
         res.json({
           data
@@ -123,13 +143,16 @@ router.get("/search?:query", function (req, res, next) {
   } else if (numFilters == 3) {
     req.db
       .from('offences')
-      .select('area', 'age', 'gender', 'year', 'month')
+      .select('offences.area as LGA')
       .where(filterArray[1], 'IN', values[1])
       .where(filterArray[2], 'IN', values[2])
-      .orderBy('year', 'asc')
+      .sum(`${column} as total`)
+      .select('areas.lat', 'areas.lng')
+      .join('areas', 'areas.area', '=', 'offences.area')
+      .groupBy('offences.area')
       .then((rows) => {
         for (row of rows) {
-          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
         }
         res.json({
           data
@@ -142,14 +165,17 @@ router.get("/search?:query", function (req, res, next) {
   } else if (numFilters == 4) {
     req.db
       .from('offences')
-      .select('area', 'age', 'gender', 'year', 'month')
+      .select('offences.area as LGA')
       .where(filterArray[1], 'IN', values[1])
       .where(filterArray[2], 'IN', values[2])
       .where(filterArray[3], 'IN', values[3])
-      .orderBy('year', 'asc')
+      .sum(`${column} as total`)
+      .select('areas.lat', 'areas.lng')
+      .join('areas', 'areas.area', '=', 'offences.area')
+      .groupBy('offences.area')
       .then((rows) => {
         for (row of rows) {
-          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
         }
         res.json({
           data
@@ -162,15 +188,18 @@ router.get("/search?:query", function (req, res, next) {
   } else if (numFilters == 5) {
     req.db
       .from('offences')
-      .select('area', 'age', 'gender', 'year', 'month')
+      .select('offences.area as LGA')
       .where(filterArray[1], 'IN', values[1])
       .where(filterArray[2], 'IN', values[2])
       .where(filterArray[3], 'IN', values[3])
       .where(filterArray[4], 'IN', values[4])
-      .orderBy('year', 'asc')
+      .sum(`${column} as total`)
+      .select('areas.lat', 'areas.lng')
+      .join('areas', 'areas.area', '=', 'offences.area')
+      .groupBy('offences.area')
       .then((rows) => {
         for (row of rows) {
-          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
         }
         res.json({
           data
@@ -183,16 +212,19 @@ router.get("/search?:query", function (req, res, next) {
   } else if (numFilters == 6) {
     req.db
       .from('offences')
-      .select('area', 'age', 'gender', 'year', 'month')
+      .select('offences.area as LGA')
       .where(filterArray[1], 'IN', values[1])
       .where(filterArray[2], 'IN', values[2])
       .where(filterArray[3], 'IN', values[3])
       .where(filterArray[4], 'IN', values[4])
       .where(filterArray[5], 'IN', values[5])
-      .orderBy('year', 'asc')
+      .sum(`${column} as total`)
+      .select('areas.lat', 'areas.lng')
+      .join('areas', 'areas.area', '=', 'offences.area')
+      .groupBy('offences.area')
       .then((rows) => {
         for (row of rows) {
-          data.push(`[${row['area']},${row['age']},${row['gender']},${row['year']},${row['month']}]`);
+          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
         }
         res.json({
           data

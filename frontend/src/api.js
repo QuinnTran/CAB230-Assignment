@@ -1,5 +1,5 @@
+import { useState, useEffect } from 'react';
 
-// let JWT = "null";
 
 export function regBtn(email, password) {
     return fetch("https://cab230.hackhouse.sh/register", {
@@ -10,6 +10,9 @@ export function regBtn(email, password) {
         }
     })
         .then(res => res.json())
+        .then(function (result) {
+            console.log("Register successfully")
+        })
         .catch(function (error) {
             console.log(
                 "There has been a problem with your fetch operation: ",
@@ -33,11 +36,37 @@ export function logBtn(email, password) {
             throw new Error("Network response was not ok.");
         })
         .then(function (result) {
+            let message = "";
+            message = JSON.stringify(result);
+            console.log("Login Success!")
             document.cookie = `token=${result.token}`;
         })
         .catch(function (error) {
             console.log("There has been a problem with your fetch operation: ", error.message);
         });
+}
+
+// ------------------------ SEARCH ----------------------------
+export function useSearchBtn(search) {
+    const [loading, setLoading] = useState(true);
+    const [query, setQuery] = useState([]);
+    const [error, setError] = useState(null);
+    useEffect(() => {
+        serBtn(search)
+            .then(query => {
+                setQuery(query);
+                setLoading(false);
+            })
+            .catch(e => {
+                setError(e);
+                setLoading(false);
+            });
+    }, [search]);
+    return {
+        loading,
+        query,
+        error
+    };
 }
 
 export function serBtn(search) {
@@ -46,11 +75,11 @@ export function serBtn(search) {
     let head = { Authorization: `Bearer ${getCookie("token")}` };
     getParam.headers = head;
 
-    console.log(getCookie("token"));
-
     //The URL
     const input = "offence=" + search;
-    const url = "https://cab230.hackhouse.sh/search?" + input;
+    const baseURL = "https://cab230.hackhouse.sh/search?";
+    const url = baseURL + input;
+
     return fetch(encodeURI(url), getParam)
         .then(function (response) {
             if (response.ok) {
@@ -66,8 +95,6 @@ export function serBtn(search) {
                 lat: res.lat,
                 lng: res.lng
             }))
-            console.log(res);
-
             return res;
         })
         .catch(function (error) {
@@ -84,10 +111,10 @@ function getCookie(cname) {
     var ca = decodedCookie.split(';');
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) == ' ') {
+        while (c.charAt(0) === ' ') {
             c = c.substring(1);
         }
-        if (c.indexOf(name) == 0) {
+        if (c.indexOf(name) === 0) {
             return c.substring(name.length, c.length);
         }
     }

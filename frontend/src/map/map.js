@@ -1,6 +1,8 @@
+import "./map.css";
+
 const { Map: LeafletMap, TileLayer, Marker, Popup } = ReactLeaflet
 
-class SimpleExample extends React.Component {
+class Map extends React.Component {
     constructor() {
         super()
         this.state = {
@@ -27,6 +29,3 @@ class SimpleExample extends React.Component {
         );
     }
 }
-
-
-ReactDOM.render(<SimpleExample />, document.getElementById('container'))
