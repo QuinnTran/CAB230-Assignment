@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-import DropdownButton from 'react-bootstrap/DropdownButton'
-import Dropdown from 'react-bootstrap/Dropdown'
-
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
 
 export default function Off() {
   const [offences, setOffences] = useState([]);
@@ -19,10 +15,10 @@ export default function Off() {
     });
 
   return (
-    <DropdownButton id="dropdown-basic-button" title="Offences">
-      {offences.map((offences, index) => (
-        <Dropdown.Item key={index}>{offences}</Dropdown.Item>
+    <table>
+      {offences.map(value => (
+        <tr><td>{value}</td></tr>
       ))}
-    </DropdownButton>
+    </table>
   )
 }

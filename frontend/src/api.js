@@ -36,8 +36,6 @@ export function logBtn(email, password) {
             throw new Error("Network response was not ok.");
         })
         .then(function (result) {
-            let message = "";
-            message = JSON.stringify(result);
             console.log("Login Success!")
             document.cookie = `token=${result.token}`;
         })
@@ -47,10 +45,13 @@ export function logBtn(email, password) {
 }
 
 // ------------------------ SEARCH ----------------------------
+// export function useSearchBtn(offence, area, age, gender, year) {
 export function useSearchBtn(search) {
+
     const [loading, setLoading] = useState(true);
-    const [query, setQuery] = useState([]);
     const [error, setError] = useState(null);
+    const [query, setQuery] = useState([]);
+
     useEffect(() => {
         serBtn(search)
             .then(query => {
@@ -69,18 +70,43 @@ export function useSearchBtn(search) {
     };
 }
 
+// export function serBtn(offence, area, age, gender, year) {
 export function serBtn(search) {
+
     //The parameters of the call
     let getParam = { method: "GET" };
     let head = { Authorization: `Bearer ${getCookie("token")}` };
     getParam.headers = head;
 
     //The URL
-    const input = "offence=" + search;
-    const baseURL = "https://cab230.hackhouse.sh/search?";
-    const url = baseURL + input;
+    // let offenceSer = `offence=${offence}`;
+    // let areaSer = `area=${area}`;
+    // let ageSer = `age=${age}`;
+    // let genderSer = `gender=${gender}`;
+    // let yearSer = `year=${year}`;
 
-    return fetch(encodeURI(url), getParam)
+    // if (offenceSer === undefined) {
+    //     offenceSer = "";
+    // }
+    // if (areaSer === undefined) {
+    //     areaSer = "";
+    // }
+    // if (ageSer === undefined) {
+    //     ageSer = "";
+    // }
+    // if (genderSer === undefined) {
+    //     genderSer = "";
+    // }
+    // if (yearSer === undefined) {
+    //     yearSer = "";
+    // }
+
+
+    const input = "offence=" + search;
+    const baseURL = "https://cab230.hackhouse.sh/search?" + input;
+    // const url = baseURL + offenceSer + areaSer + ageSer + genderSer + yearSer;
+
+    return fetch(encodeURI(baseURL), getParam)
         .then(function (response) {
             if (response.ok) {
                 return response.json();

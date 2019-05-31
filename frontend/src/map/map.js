@@ -1,6 +1,6 @@
+import react, { useState, useEffect } from 'react';
+import L from "leaflet"
 import "./map.css";
-
-const { Map: LeafletMap, TileLayer, Marker, Popup } = ReactLeaflet
 
 class Map extends React.Component {
     constructor() {

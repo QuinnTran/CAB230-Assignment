@@ -35,10 +35,10 @@ function Page() {
 
 function Home() {
   return (
-  <div className="home-page">
-    <h1>Welcome to Crime Database</h1>
-    <p>You can find any offences here</p>
-  </div>
+    <div className="home-page">
+      <h1>Welcome to Crime Database</h1>
+      <p>You can find any offences here</p>
+    </div>
   )
 }
 //REGISTER PAGE
@@ -63,7 +63,7 @@ function OffencesPage() {
   return (
     <div>
       <h2>List of offences</h2>
-      <Off/>
+      <Off />
     </div>
   );
 }
@@ -72,7 +72,7 @@ function OffencesPage() {
 function SearchPage() {
   return (
     <div>
-      <Ser/>
+      <Ser />
     </div>
   );
 }
