@@ -252,12 +252,22 @@
                 "operationId": "listOffences",
                 "responses": {
                     "200": {
-                        "description": "ok",
-                        "produces": [
-                            "application/json"
-                        ],
-                        "schema": {
-                            "$ref": "#/definitions/OFF200"
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "offences": {
+                                            "type": "array",
+                                            "example": [
+                                                "Advertising Prostitution",
+                                                "Armed Robbery"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -277,11 +287,21 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "produces": [
-                            "application/json"
-                        ],
-                        "schema": {
-                            "$ref": "#/definitions/AREA200"
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "areas": {
+                                            "type": "array",
+                                            "example": [
+                                                "Aurukun Shire Council",
+                                                "Balonne Shire Council"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -301,11 +321,21 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "produces": [
-                            "application/json"
-                        ],
-                        "schema": {
-                            "$ref": "#/definitions/AGE200"
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "ages": {
+                                            "type": "array",
+                                            "example": [
+                                                "Adult",
+                                                "Juvenile"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -325,11 +355,21 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "produces": [
-                            "application/json"
-                        ],
-                        "schema": {
-                            "$ref": "#/definitions/GEN200"
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "genders": {
+                                            "type": "array",
+                                            "example": [
+                                                "Female",
+                                                "Male"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -350,114 +390,23 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "produces": [
-                            "application/json"
-                        ],
-                        "schema": {
-                            "$ref": "#/definitions/YEAR200"
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "years": {
+                                            "type": "array",
+                                            "example": [
+                                                2001,
+                                                2002
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-            }
-        },
-        "definitions": {
-            "REG201": {
-                "type": "object",
-                "properties": {
-                    "message": "yay! you've successfully registered your user account :)"
-                }
-            },
-            "REG400": {
-                "type": "object",
-                "properties": {
-                    "message": "oops! It looks like that user already exists :("
-                }
-            },
-            "LOG200": {
-                "type": "object",
-                "properties": {
-                    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo1Nzg2LCJlbWFpbCI6ImRlbW8xMjM0QGdtYWlsLmNvbSJ9LCJpYXQiOjE1NTUzMjQ2MDIsImV4cCI6MTU1NTQxMTAwMn0.mo85iKuAQ_h8n8-6pkeNNs5CCnV0G8hScxhi_ml_Q6c",
-                    "token_type": "Bearer",
-                    "expires_in": 86400
-                }
-            },
-            "LOG401": {
-                "type": "object",
-                "properties": {
-                    "message": "invalid login - bad password"
-                }
-            },
-            "SER200": {
-                "type": "object",
-                "properties": {
-                    "query": {
-                        "offence": "Homicide (Murder)"
-                    },
-                    "result": [
-                        {
-                            "LGA": "Aurukun Shire Council",
-                            "total": 4,
-                            "lat": -27.470812,
-                            "lng": 153.022455
-                        }
-                    ]
-                }
-            },
-            "SER400": {
-                "type": "object",
-                "properties": {
-                    "message": "oops! it looks like you're missing the offence query parm"
-                }
-            },
-            "SER401": {
-                "type": "object",
-                "properties": {
-                    "message": "oh no! it looks like your authorization token is invalid..."
-                }
-            },
-            "OFF200": {
-                "type": "object",
-                "properties": {
-                    "offences": [
-                        "Advertising Prostitution",
-                        "Armed Robbery"
-                    ]
-                }
-            },
-            "AREA200": {
-                "type": "object",
-                "properties": {
-                    "offences": [
-                        "Aurukun Shire Council",
-                        "Balonne Shire Council"
-                    ]
-                }
-            },
-            "AGE200": {
-                "type": "object",
-                "properties": {
-                    "ages": [
-                        "Adult",
-                        "Juvenile"
-                    ]
-                }
-            },
-            "GEN200": {
-                "type": "object",
-                "properties": {
-                    "offences": [
-                        "Female",
-                        "Male"
-                    ]
-                }
-            },
-            "YEAR200": {
-                "type": "object",
-                "properties": {
-                    "offences": [
-                        2001,
-                        2002
-                    ]
                 }
             }
         }

@@ -47,7 +47,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/', swaggerUI.serve, swaggerUI.setup(swaggerDocument)) // Swagger
 
-// Logger package
+//   package
 logger.token('req', (req, res) => JSON.stringify(req.headers))
 logger.token('res', (req, res) => {
   const headers = {}

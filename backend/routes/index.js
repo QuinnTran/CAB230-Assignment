@@ -34,7 +34,7 @@ router.post('/login', function (req, res, next) {
     .then(row => row[0].password)
     .then(passDB => {
       if (bcrypt.compareSync(password, passDB)) {
-        var expire = Math.floor(Date.now() / 1000) + (60 * 60);
+        var expire = Math.floor(Date.now() / 1000) + (3600);
         // -----ASSIGNED JWT-----
         var token = jwt.sign({ user: email, exp: expire, time: Date.now() }, 'shhhhh');
         res.send({
@@ -43,7 +43,7 @@ router.post('/login', function (req, res, next) {
           expires_in: expire
         });
       } else {
-        res.send(401, "PASSWORD INCORRECT");
+        res.send(401, "message: invalid login - bad password"");
       }
     })
     .catch((err) => {
