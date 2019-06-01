@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-
+// ------------------------ AUTHENTICATION ----------------------------
 export function regBtn(email, password) {
     return fetch("https://cab230.hackhouse.sh/register", {
         method: "POST",
@@ -44,10 +44,80 @@ export function logBtn(email, password) {
         });
 }
 
-// ------------------------ SEARCH ----------------------------
-// export function useSearchBtn(offence, area, age, gender, year) {
-export function useSearchBtn(search) {
+// ------------------------ AREAS ----------------------------
+function getAreas() {
+    return fetch("https://cab230.hackhouse.sh/areas")
+        .then(res => res.json())
+        .then(res => res.areas)
+}
 
+export function useAreas() {
+    const [areaLoading, setAreaLoading] = useState(true);
+    const [areaError, setAreaError] = useState(null);
+    const [areas, setAreas] = useState([]);
+
+    useEffect(() => {
+        getAreas()
+            .then(areas => {
+                setAreas(areas);
+                setAreaLoading(false);
+            })
+            .catch(e => {
+                setAreaError(e);
+                setAreaLoading(false);
+            });
+    }, []);
+    return {
+        areaLoading,
+        areas,
+        areaError
+    };
+}
+
+// ------------------------ AGES ----------------------------
+function getAges() {
+    return fetch("https://cab230.hackhouse.sh/ages")
+        .then(res => res.json())
+        .then(res => res.ages)
+}
+export function useAges() {
+    const [ageLoading, setAgeLoading] = useState(true);
+    const [ageError, setAgeError] = useState(null);
+    const [ages, setAge] = useState([]);
+
+    useEffect(() => {
+        getAges()
+            .then(ages => {
+                setAge(ages);
+                setAgeLoading(false);
+            })
+            .catch(e => {
+                setAgeError(e);
+                setAgeLoading(false);
+            });
+    }, []);
+    return {
+        ageError,
+        ages,
+        ageLoading
+    };
+}
+// ------------------------ GENDERS ----------------------------
+function getGenders() {
+    return fetch("https://cab230.hackhouse.sh/genders")
+        .then(res => res.json())
+        .then(res => res.areas)
+}
+
+// ------------------------ YEARS ----------------------------
+function getYears() {
+    return fetch("https://cab230.hackhouse.sh/years")
+        .then(res => res.json())
+        .then(res => res.areas)
+}
+
+// ------------------------ SEARCH ----------------------------
+export function useSearchBtn(search) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [query, setQuery] = useState([]);
@@ -70,37 +140,11 @@ export function useSearchBtn(search) {
     };
 }
 
-// export function serBtn(offence, area, age, gender, year) {
 export function serBtn(search) {
-
     //The parameters of the call
     let getParam = { method: "GET" };
     let head = { Authorization: `Bearer ${getCookie("token")}` };
     getParam.headers = head;
-
-    //The URL
-    // let offenceSer = `offence=${offence}`;
-    // let areaSer = `area=${area}`;
-    // let ageSer = `age=${age}`;
-    // let genderSer = `gender=${gender}`;
-    // let yearSer = `year=${year}`;
-
-    // if (offenceSer === undefined) {
-    //     offenceSer = "";
-    // }
-    // if (areaSer === undefined) {
-    //     areaSer = "";
-    // }
-    // if (ageSer === undefined) {
-    //     ageSer = "";
-    // }
-    // if (genderSer === undefined) {
-    //     genderSer = "";
-    // }
-    // if (yearSer === undefined) {
-    //     yearSer = "";
-    // }
-
 
     const input = "offence=" + search;
     const baseURL = "https://cab230.hackhouse.sh/search?" + input;

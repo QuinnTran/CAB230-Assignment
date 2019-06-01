@@ -43,7 +43,7 @@ router.post('/login', function (req, res, next) {
           expires_in: expire
         });
       } else {
-        res.send(401, "message: invalid login - bad password"");
+        res.send(401, "invalid login - bad password");
       }
     })
     .catch((err) => {

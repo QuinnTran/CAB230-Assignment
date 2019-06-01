@@ -6,6 +6,7 @@
   "main": "src/index.js",
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "glamorous": "^5.0.0",
     "install": "^0.12.2",
     "leaflet": "^1.5.1",
     "react": "^16.8.6",
@@ -17,6 +18,7 @@
     "react-router-dom": "5.0.0",
     "react-scripts": "2.1.8",
     "react-smart-data-table": "^0.7.0",
+    "react-tabs": "^3.0.0",
     "recharts": "^1.6.2"
   },
   "devDependencies": {

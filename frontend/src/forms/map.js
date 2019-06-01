@@ -32,7 +32,7 @@ function Map({ markerPosition }) {
         if (markerImg.current) {
             markerImg.current.setLatLng(markerPosition);
         } else {
-            for (var row of window.query) {
+            for (var row of window.queryShow) {
                 markerImg.current = L.marker([row.lat, row.lng]).addTo(mapImg.current)
             }
         }
@@ -40,7 +40,7 @@ function Map({ markerPosition }) {
     return <div id="map" style={style} />
 }
 
-export default function mapShow() {
+export default function MapShow() {
     const [markerPosition, setMarkerPosition] = useState({
         lat: 0, lng: 0
     });
