@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useSearchBtn } from "../api"
 import SmartDataTable from 'react-smart-data-table';
 import { Bar, BarChart, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import mapShow from "./map";
+
 
 export default function Ser() {
   const [search, setSearch] = useState("");
   // const { loading, query, error } = useSearchBtn(offence, area, age, gender, year);
   const { loading, query, error } = useSearchBtn(search);
-
 
   if (loading) {
     return <p>Loading...</p>;
@@ -25,6 +26,10 @@ export default function Ser() {
       <hr />
       <h2>Result</h2>
       <SmartDataTable data={query} sortable />
+      <div class="tab">
+        <button class="tablinks" onclick="open(event, 'Chart')">Chart</button>
+        <button class="tablinks" onclick="open(event, 'Map')">Map</button>
+      </div>
       <ChartDisplay data={query} />
     </div>
   )

@@ -4,11 +4,6 @@ var bcrypt = require("bcrypt")
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 
-// HOME
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Crime Database' });
-});
-
 //------------------------------- REG - LOG -----------------------------
 router.post('/register', function (req, res, next) {
   const password = bcrypt.hashSync(req.body.password, 5);
@@ -71,10 +66,10 @@ router.get("/search?:query", function (req, res, next) {
   catch (err) {
     console.log(err);
     res.json({
-      "Error": true,
-      "Message": "Token is not match"
+      "error": "oops! it looks like you're missing the authorization header"
     })
   }
+
   //loop through every filters 
   for (i of filter) {
     ++numFilters;
@@ -115,7 +110,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+        res.json({ "error": "oops! it looks like you're missing the authorization header" })
       })
 
   } else if (numFilters == 2) {
@@ -138,7 +133,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+        res.json({ "error": "oops! it looks like you're missing the authorization header" })
       })
   } else if (numFilters == 3) {
     req.db
@@ -160,7 +155,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+        res.json({ "error": "oops! it looks like you're missing the authorization header" })
       })
   } else if (numFilters == 4) {
     req.db
@@ -183,7 +178,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+        res.json({ "error": "oops! it looks like you're missing the authorization header" })
       })
   } else if (numFilters == 5) {
     req.db
@@ -207,7 +202,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+        res.json({ "error": "oops! it looks like you're missing the authorization header" })
       })
   } else if (numFilters == 6) {
     req.db
@@ -232,16 +227,16 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "Error": true, "Message": "Error executing MySQL query" })
+        res.json({ "error": "oops! it looks like you're missing the authorization header" })
       })
   }
 });
 //--------------------------------- HELPERS-------------------------------
 // OFFENCES
-router.get("/Offences", function (req, res, next) {
+router.get("/offences", function (req, res, next) {
   req.db.from('offence_columns').select("pretty")
     .then((rows) => {
-      res.json({ "Offences": rows.map(row => row.pretty) })
+      res.json({ "offences": rows.map(row => row.pretty) })
     })
     .catch((err) => {
       console.log(err);
@@ -249,10 +244,10 @@ router.get("/Offences", function (req, res, next) {
     })
 });
 // AREAS
-router.get("/Areas", function (req, res, next) {
+router.get("/areas", function (req, res, next) {
   req.db.from('areas').select("area")
     .then((rows) => {
-      res.json({ "Areas": rows.map(row => row.area) })
+      res.json({ "areas": rows.map(row => row.area) })
     })
     .catch((err) => {
       console.log(err);
@@ -260,10 +255,10 @@ router.get("/Areas", function (req, res, next) {
     })
 });
 // AGES
-router.get("/Ages", function (req, res, next) {
+router.get("/ages", function (req, res, next) {
   req.db.from('offences').select('age').distinct("age")
     .then((rows) => {
-      res.json({ "Ages": rows.map(row => row.age) })
+      res.json({ "ages": rows.map(row => row.age) })
     })
     .catch((err) => {
       console.log(err);
@@ -271,10 +266,10 @@ router.get("/Ages", function (req, res, next) {
     })
 });
 // GENDERS
-router.get("/Genders", function (req, res, next) {
+router.get("/genders", function (req, res, next) {
   req.db.from('offences').select("gender").distinct("gender")
     .then((rows) => {
-      res.json({ "Genders": rows.map(row => row.gender) })
+      res.json({ "genders": rows.map(row => row.gender) })
     })
     .catch((err) => {
       console.log(err);
@@ -282,10 +277,10 @@ router.get("/Genders", function (req, res, next) {
     })
 });
 // YEARS
-router.get("/Years", function (req, res, next) {
+router.get("/years", function (req, res, next) {
   req.db.from('offences').select("year").distinct("year")
     .then((rows) => {
-      res.json({ "Years": rows.map(row => row.year) })
+      res.json({ "years": rows.map(row => row.year) })
     })
     .catch((err) => {
       console.log(err);
