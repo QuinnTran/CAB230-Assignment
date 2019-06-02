@@ -26,7 +26,7 @@ export default function Reg() {
         <br></br><br></br>
         <label htmlFor="password">Password: </label>
         <input
-          type="password"
+          type="text"
           name="password"
           id="password"
           value={password}
