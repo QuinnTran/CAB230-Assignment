@@ -9,7 +9,9 @@ const swaggerUI = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const helmet = require('helmet');
 
-var indexRouter = require('./routes/index');
+var authRouter = require('./routes/authentications');
+var helpersRouter = require('./routes/helpers');
+var serRouter = require('./routes/advanceSearch');
 var usersRouter = require('./routes/users');
 const cors = require('cors');
 
@@ -42,7 +44,9 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use('/', indexRouter);
+app.use('/', authRouter);
+app.use('/', helpersRouter);
+app.use('/', serRouter);
 app.use('/users', usersRouter);
 app.use('/', swaggerUI.serve, swaggerUI.setup(swaggerDocument)) // Swagger
 

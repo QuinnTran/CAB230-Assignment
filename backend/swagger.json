@@ -3,15 +3,7 @@
     "info": {
         "title": "CAB230 : Web Computing API",
         "description": "This API is to be used during development of assignments for the QUT CAB230 Web Computing Unit. If you have any issues, please comment on Slack.",
-        "version": "1.0.0",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "email": "j.hogan@qut.edu.au"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        }
+        "version": "1.0.0"
     },
     "servers": [
         {
