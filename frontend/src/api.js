@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from "react-dom"
 
-export const baseURL = "http://localhost:3000";
-
+// export const baseURL = "http://localhost:3000";
+export const baseURL = "https://cab230.hackhouse.sh";
 /**
  * Authentication
  * @param {*} email 
@@ -276,8 +276,6 @@ export function filBtn() {
     let head = { Authorization: `Bearer ${getCookie("token")}` };
     getParam.headers = head;
 
-    const baseURL = `${baseURL}/search?`;
-
     var data = `offence=${window.inputOff}`;
 
     if (window.inputArea != undefined) {
@@ -293,8 +291,8 @@ export function filBtn() {
         url += `&year=${window.inputYear}`;
     }
 
-    const url = baseURL + data;
-
+    const url = `${baseURL}/search?` + data;
+    console.log(url)
     return fetch(encodeURI(url), getParam)
         .then(function (response) {
             if (response.ok) {
@@ -302,8 +300,7 @@ export function filBtn() {
             }
             throw new Error("Network response was not ok.");
         })
-        .then(res => res.showResult)
-        .then(showResults => showResults)
+        .then(res => res.result)
         .then(res => {
             res.map(res => ({
                 LGA: res.LGA,
@@ -311,6 +308,8 @@ export function filBtn() {
                 lat: res.lat,
                 lng: res.lng
             }))
+            window.filterBtn = res;
+            console.log(window.filterBtn);
             return res;
         })
         .catch(function (error) {

@@ -31,7 +31,7 @@ export default function Ser() {
       <div className="container">
         <h2>Search</h2>
         <SearchBar onSubmit={setSearch} />
-        <FilterBar />
+        <FilterBar onSubmit={setSearch} />
 
       </div>
       <hr />
