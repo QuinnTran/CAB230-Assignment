@@ -149,9 +149,6 @@
         },
         "/search": {
             "get": {
-                "tags": [
-                    "Search"
-                ],
                 "description": "Search for Offence data",
                 "parameters": [
                     {
@@ -210,36 +207,87 @@
                     }
                 ],
                 "responses": {
-                    "responses": {
-                        "200": {
-                            "description": "OK",
-                            "produces": [
-                                "application/json"
-                            ],
-                            "schema": {
-                                "$ref": "#/definitions/SER200"
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "query": {
+                                            "type": "object",
+                                            "properties": {
+                                                "offence": {
+                                                    "type": "string",
+                                                    "example": "Homicide (Murder)"
+                                                }
+                                            }
+                                        },
+                                        "result": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "LGA": {
+                                                        "type": "string",
+                                                        "example": "Aurukun Shire Council"
+                                                    },
+                                                    "total": {
+                                                        "type": "intager",
+                                                        "example": 4
+                                                    },
+                                                    "lat": {
+                                                        "type": "decimal(10,8)",
+                                                        "example": -27.470812
+                                                    },
+                                                    "lng": {
+                                                        "type": "decimal(11,8)",
+                                                        "example": 153.022455
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                        },
-                        "400": {
-                            "description": "Bad Request",
-                            "produces": [
-                                "application/json"
-                            ],
-                            "schema": {
-                                "$ref": "#/definitions/SER400"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "oops! it looks like you're missing the offence query parm"
+                                        }
+                                    }
+                                }
                             }
-                        },
-                        "401": {
-                            "description": "Unauthorized",
-                            "produces": [
-                                "application/json"
-                            ],
-                            "schema": {
-                                "$ref": "#/definitions/SER401"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "oh no! it looks like your authorization token is invalid..."
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
-                }
+                },
+                "tags": [
+                    "Search"
+                ]
             }
         },
         "/offences": {

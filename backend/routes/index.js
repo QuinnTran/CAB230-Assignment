@@ -14,16 +14,16 @@ router.post('/register', function (req, res, next) {
     "created_at": today,
     "updated_at": today
   }
-
   req.db.from('users').insert(users)
-    .then(res.send({
-      "code": 200,
-      "success": "user registered sucessfully",
-      "password": password
-    }))
+    .then(function (result) {
+      res.status(201).json({
+        "message": "yay! you've successfully registered y our user account :)"
+      })
+    })
     .catch((err) => {
-      console.log(err);
-      res.json({ "Error": true, "Message": "Error in MySQL query" })
+      res.status(400).json({
+        "message": "oops! It looks like that user already exists :("
+      })
     })
 });
 
@@ -37,13 +37,13 @@ router.post('/login', function (req, res, next) {
         var expire = Math.floor(Date.now() / 1000) + (3600);
         // -----ASSIGNED JWT-----
         var token = jwt.sign({ user: email, exp: expire, time: Date.now() }, 'shhhhh');
-        res.send({
+        res.status(200).send({
           access_token: token,
           "Token type": "Bearer",
           expires_in: expire
         });
       } else {
-        res.send(401, "invalid login - bad password");
+        res.json(401, { Message: "invalid login - bad password" });
       }
     })
     .catch((err) => {
@@ -57,19 +57,21 @@ router.get("/search?:query", function (req, res, next) {
   var filter = query.split("&"); //split filter using & (ex: search?offence=arson&area=winton)
   var numFilters = 0;
   var data = [];
-  var column = req.query.offence.split("").join("").toLowerCase();
+  var column = req.query.offence.split(" ").join("").toLowerCase();
+
 
   //Show error if token is not match with login token
+  const token_auth = req.headers.authorization;
   try {
-    var decoded = jwt.verify(token, 'root');
+    var decoded = jwt.verify(token_auth, 'shhhhh');
   }
   catch (err) {
     console.log(err);
     res.json({
-      "error": "oops! it looks like you're missing the authorization header"
+      "error": true,
+      "message": "oops! it looks like you're missing the authorization header"
     })
   }
-
   //loop through every filters 
   for (i of filter) {
     ++numFilters;
@@ -92,6 +94,39 @@ router.get("/search?:query", function (req, res, next) {
     values[i] = varArray[i][1].split(',');
   }
 
+  // OFFENCE FILTER AND MESSAGES
+  //error messages
+  if (offence == undefined) {
+    res.status(400).send({
+      "message": "oops! it looks like you're missing the offence query parm"
+    })
+  }
+  if (area == undefined) {
+    res.status(400).send({
+      "message": "oops! it looks like you're missing the offence query parm"
+    })
+  }
+  if (age == undefined) {
+    res.status(400).send({
+      "message": "oops! it looks like you're missing the offence query parm"
+    })
+  }
+  if (gender == undefined) {
+    res.status(400).send({
+      "message": "oops! it looks like you're missing the offence query parm"
+    })
+  }
+  if (year == undefined) {
+    res.status(400).send({
+      "message": "oops! it looks like you're missing the offence query parm"
+    })
+  }
+  if (month == undefined) {
+    res.status(400).send({
+      "message": "oops! it looks like you're missing the offence query parm"
+    })
+  }
+
   if (numFilters == 1) {
     req.db
       .from('offences')
@@ -101,16 +136,14 @@ router.get("/search?:query", function (req, res, next) {
       .join('areas', 'areas.area', '=', 'offences.area')
       .groupBy('offences.area')
       .then((rows) => {
-        for (row of rows) {
-          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
-        }
-        res.json({
-          data
+        res.status(200).json({
+          "query": req.query,
+          "result": rows
         })
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "error": "oops! it looks like you're missing the authorization header" })
+        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
 
   } else if (numFilters == 2) {
@@ -124,16 +157,14 @@ router.get("/search?:query", function (req, res, next) {
       .join('areas', 'areas.area', '=', 'offences.area')
       .groupBy('offences.area')
       .then((rows) => {
-        for (row of rows) {
-          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
-        }
-        res.json({
-          data
+        res.status(200).json({
+          "query": req.query,
+          "result": rows
         })
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "error": "oops! it looks like you're missing the authorization header" })
+        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
   } else if (numFilters == 3) {
     req.db
@@ -146,16 +177,14 @@ router.get("/search?:query", function (req, res, next) {
       .join('areas', 'areas.area', '=', 'offences.area')
       .groupBy('offences.area')
       .then((rows) => {
-        for (row of rows) {
-          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
-        }
-        res.json({
-          data
+        res.status(200).json({
+          "query": req.query,
+          "result": rows
         })
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "error": "oops! it looks like you're missing the authorization header" })
+        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
   } else if (numFilters == 4) {
     req.db
@@ -169,16 +198,14 @@ router.get("/search?:query", function (req, res, next) {
       .join('areas', 'areas.area', '=', 'offences.area')
       .groupBy('offences.area')
       .then((rows) => {
-        for (row of rows) {
-          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
-        }
-        res.json({
-          data
+        res.status(200).json({
+          "query": req.query,
+          "result": rows
         })
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "error": "oops! it looks like you're missing the authorization header" })
+        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
   } else if (numFilters == 5) {
     req.db
@@ -193,16 +220,14 @@ router.get("/search?:query", function (req, res, next) {
       .join('areas', 'areas.area', '=', 'offences.area')
       .groupBy('offences.area')
       .then((rows) => {
-        for (row of rows) {
-          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
-        }
-        res.json({
-          data
+        res.status(200).json({
+          "query": req.query,
+          "result": rows
         })
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "error": "oops! it looks like you're missing the authorization header" })
+        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
   } else if (numFilters == 6) {
     req.db
@@ -218,16 +243,14 @@ router.get("/search?:query", function (req, res, next) {
       .join('areas', 'areas.area', '=', 'offences.area')
       .groupBy('offences.area')
       .then((rows) => {
-        for (row of rows) {
-          data.push(`[${row['LGA']},${row['total']},${row['lat']},${row['lng']}]`);
-        }
-        res.json({
-          data
+        res.status(200).json({
+          "query": req.query,
+          "result": rows
         })
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "error": "oops! it looks like you're missing the authorization header" })
+        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
   }
 });
