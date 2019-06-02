@@ -43,9 +43,10 @@ router.post('/login', function (req, res, next) {
         // -----ASSIGNED JWT-----
         var token = jwt.sign({ user: email, exp: expire, time: Date.now() }, 'shhhhh');
         res.status(200).send({
-          access_token: token,
+          "token": token,
+          "access_token": token,
           "Token type": "Bearer",
-          expires_in: expire
+          "expires_in": expire
         });
       } else {
         res.json(401, { Message: "invalid login - bad password" });

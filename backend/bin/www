@@ -6,29 +6,20 @@
 
 var app = require('../app');
 var debug = require('debug')('expworld:server');
-const https = require('https');
+const https = require('http');
 
-const fs = require('fs');
-const privateKey = fs.readFileSync('./sslcert/cert.key', 'utf8');
-const certificate = fs.readFileSync('./sslcert/cert.pem', 'utf8');
-const credentials = {
-  key: privateKey,
-  cert: certificate
-};
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '443');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-const server = https.createServer(credentials, app);
-
-var port = normalizePort(process.env.PORT || '80');
+const server = https.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.

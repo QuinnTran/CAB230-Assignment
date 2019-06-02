@@ -14,9 +14,11 @@ router.get("/search?:query", function (req, res, next) {
 
 
     //Show error if token is not match with login token
-    const token_auth = req.headers.authorization;
+
     try {
-        var decoded = jwt.verify(token_auth, 'shhhhh');
+        const token_auth = req.headers.authorization;
+        var newToken = token_auth.replace("Bearer ", "");
+        var decoded = jwt.verify(newToken, 'shhhhh');
     }
     catch (err) {
         console.log(err);

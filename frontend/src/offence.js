@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { baseURL } from "./api";
 
 export default function Off() {
   const [offences, setOffences] = useState([]);
   var i = [];
 
-  fetch("https://cab230.hackhouse.sh/offences")
+  fetch(`${baseURL}/offences`)
     .then(res => res.json())
     .then(res => res.offences)
     .then(data => {

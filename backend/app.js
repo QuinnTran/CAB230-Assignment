@@ -15,15 +15,6 @@ var serRouter = require('./routes/advanceSearch');
 var usersRouter = require('./routes/users');
 const cors = require('cors');
 
-const fs = require('fs');
-const https = require('https');
-const privateKey = fs.readFileSync('./sslcert/cert.key', 'utf8');
-const certificate = fs.readFileSync('./sslcert/cert.pem', 'utf8');
-const credentials = {
-  key: privateKey,
-  cert: certificate
-};
-
 const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -80,9 +71,5 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-const server = https.createServer(credentials, app);
-server.listen(443);
-
 
 module.exports = app;

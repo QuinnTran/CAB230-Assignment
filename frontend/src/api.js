@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from "react-dom"
 
+export const baseURL = "http://localhost:3000";
+
 /**
  * Authentication
  * @param {*} email 
  * @param {*} password 
  */
 export function regBtn(email, password) {
-    return fetch("https://cab230.hackhouse.sh/register", {
+    return fetch(`${baseURL}/register`, {
         method: "POST",
         body: `email=${email}&password=${password}`,
         headers: {
@@ -29,7 +31,7 @@ export function regBtn(email, password) {
 }
 
 export function logBtn(email, password) {
-    fetch("https://cab230.hackhouse.sh/login", {
+    fetch(`${baseURL}/login`, {
         method: "POST",
         body: `email=${email}&password=${password}`,
         headers: {
@@ -57,7 +59,7 @@ export function logBtn(email, password) {
  * Helpers
  */
 function getOffences() {
-    return fetch("https://cab230.hackhouse.sh/offences")
+    return fetch(`${baseURL}/offences`)
         .then(res => res.json())
         .then(res => res.offences)
 }
@@ -84,7 +86,7 @@ export function useOffences() {
     };
 }
 function getAreas() {
-    return fetch("https://cab230.hackhouse.sh/areas")
+    return fetch(`${baseURL}/areas`)
         .then(res => res.json())
         .then(res => res.areas)
 }
@@ -111,7 +113,7 @@ export function useAreas() {
     };
 }
 function getAges() {
-    return fetch("https://cab230.hackhouse.sh/ages")
+    return fetch(`${baseURL}/ages`)
         .then(res => res.json())
         .then(res => res.ages)
 }
@@ -138,7 +140,7 @@ export function useAges() {
     };
 }
 function getGenders() {
-    return fetch("https://cab230.hackhouse.sh/genders")
+    return fetch(`${baseURL}/genders`)
         .then(res => res.json())
         .then(res => res.genders)
 }
@@ -165,7 +167,7 @@ export function useGens() {
     };
 }
 function getYears() {
-    return fetch("https://cab230.hackhouse.sh/years")
+    return fetch(`${baseURL}/years`)
         .then(res => res.json())
         .then(res => res.years)
 }
@@ -226,10 +228,9 @@ export function serBtn(search) {
     getParam.headers = head;
 
     const input = "offence=" + search;
-    const baseURL = "https://cab230.hackhouse.sh/search?" + input;
-    // const url = baseURL + offenceSer + areaSer + ageSer + genderSer + yearSer;
+    const oldURL = `${baseURL}/search?` + input;
 
-    return fetch(encodeURI(baseURL), getParam)
+    return fetch(encodeURI(oldURL), getParam)
         .then(function (response) {
             if (response.ok) {
                 return response.json();
@@ -275,7 +276,7 @@ export function filBtn() {
     let head = { Authorization: `Bearer ${getCookie("token")}` };
     getParam.headers = head;
 
-    const baseURL = "https://cab230.hackhouse.sh/search?";
+    const baseURL = `${baseURL}/search?`;
 
     var data = `offence=${window.inputOff}`;
 
