@@ -1,36 +1,56 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-import Reg from "./forms/reg";
-import Log from "./forms/log";
+import Reg from "./reg";
+import Log from "./login";
 import Off from "./offence";
-
-import Ser from "./forms/search"
-
-
+import Ser from "./search"
+import { Logout } from "./logout";
 import "./styles.css";
 
-function Page() {
-  return (
-    <Router>
-      <div className="header">
-        <h1>Queensland Crime Database</h1>
-      </div>
-      <div id="menu" className="topnav">
-        <Link to="/">Home</Link>
-        <Link to="/register">Register</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/offences">Offences</Link>
-        <Link to="/search">Search</Link>
-      </div>
+export default function Page() {
+  if (document.cookie) {
+    return (
+      <Router>
+        <div className="header">
+          <h1>Queensland Crime Database</h1>
+        </div>
+        <div id="menu" className="topnav">
+          <Link to="/">Home</Link>
+          <Link to="/offences">Offences</Link>
+          <Link to="/search">Search</Link>
+          <Link to="/logout">Logout</Link>
+        </div>
 
-      <Route exact path="/" component={Home} />
-      <Route path="/register" component={RegisterPage} />
-      <Route path="/login" component={LoginPage} />
-      <Route path="/offences" component={OffencesPage} />
-      <Route path="/search" component={SearchPage} />
-    </Router>
-  );
+        <Route exact path="/" component={Home} />
+        <Route path="/register" component={RegisterPage} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/logout" component={LogoutPage} />
+        <Route path="/offences" component={OffencesPage} />
+        <Route path="/search" component={SearchPage} />
+      </Router>
+    )
+  } else {
+    return (
+      <Router>
+        <div className="header">
+          <h1>Queensland Crime Database</h1>
+        </div>
+        <div id="menu" className="topnav">
+          <Link to="/">Home</Link>
+          <Link to="/register">Register</Link>
+          <Link to="/login">Login</Link>
+          <Link to="/offences">Offences</Link>
+        </div>
+
+        <Route exact path="/" component={Home} />
+        <Route path="/register" component={RegisterPage} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/offences" component={OffencesPage} />
+        <Route path="/search" component={SearchPage} />
+      </Router>
+    )
+  }
 }
 
 function Home() {
@@ -77,4 +97,11 @@ function SearchPage() {
   );
 }
 
-export default Page;
+function LogoutPage() {
+  return (
+    <div>
+      <Logout />
+    </div>
+  );
+}
+

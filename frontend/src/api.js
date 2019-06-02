@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from "react-dom"
 
-// ------------------------ AUTHENTICATION ----------------------------
+/**
+ * Authentication
+ * @param {*} email 
+ * @param {*} password 
+ */
 export function regBtn(email, password) {
     return fetch("https://cab230.hackhouse.sh/register", {
         method: "POST",
@@ -11,7 +16,9 @@ export function regBtn(email, password) {
     })
         .then(res => res.json())
         .then(function (result) {
-            console.log("Register successfully")
+            let appDiv = document.getElementById("app");
+            appDiv.innerHTML = JSON.stringify(result);
+            regBtn.disabled = true;
         })
         .catch(function (error) {
             console.log(
@@ -36,21 +43,51 @@ export function logBtn(email, password) {
             throw new Error("Network response was not ok.");
         })
         .then(function (result) {
-            console.log("Login Success!")
+            let appDiv = document.getElementById("app");
+            appDiv.innerHTML = JSON.stringify(result);
             document.cookie = `token=${result.token}`;
+            document.location.href = "/search";
         })
         .catch(function (error) {
             console.log("There has been a problem with your fetch operation: ", error.message);
         });
 }
 
-// ------------------------ AREAS ----------------------------
+/**
+ * Helpers
+ */
+function getOffences() {
+    return fetch("https://cab230.hackhouse.sh/offences")
+        .then(res => res.json())
+        .then(res => res.offences)
+}
+export function useOffences() {
+    const [offLoading, setOffLoading] = useState(true);
+    const [offError, setOffError] = useState(null);
+    const [offences, setOffences] = useState([]);
+
+    useEffect(() => {
+        getOffences()
+            .then(offences => {
+                setOffences(offences);
+                setOffLoading(false);
+            })
+            .catch(e => {
+                setOffError(e);
+                setOffLoading(false);
+            });
+    }, []);
+    return {
+        offences,
+        offLoading,
+        offError
+    };
+}
 function getAreas() {
     return fetch("https://cab230.hackhouse.sh/areas")
         .then(res => res.json())
         .then(res => res.areas)
 }
-
 export function useAreas() {
     const [areaLoading, setAreaLoading] = useState(true);
     const [areaError, setAreaError] = useState(null);
@@ -68,13 +105,11 @@ export function useAreas() {
             });
     }, []);
     return {
-        areaLoading,
         areas,
+        areaLoading,
         areaError
     };
 }
-
-// ------------------------ AGES ----------------------------
 function getAges() {
     return fetch("https://cab230.hackhouse.sh/ages")
         .then(res => res.json())
@@ -97,26 +132,70 @@ export function useAges() {
             });
     }, []);
     return {
-        ageError,
         ages,
-        ageLoading
+        ageLoading,
+        ageError
     };
 }
-// ------------------------ GENDERS ----------------------------
 function getGenders() {
     return fetch("https://cab230.hackhouse.sh/genders")
         .then(res => res.json())
-        .then(res => res.areas)
+        .then(res => res.genders)
 }
+export function useGens() {
+    const [genLoading, setGenLoading] = useState(true);
+    const [genError, setGenError] = useState(null);
+    const [genders, setGen] = useState([]);
 
-// ------------------------ YEARS ----------------------------
+    useEffect(() => {
+        getGenders()
+            .then(genders => {
+                setGen(genders);
+                setGenLoading(false);
+            })
+            .catch(e => {
+                setGenError(e);
+                setGenLoading(false);
+            });
+    }, []);
+    return {
+        genders,
+        genLoading,
+        genError
+    };
+}
 function getYears() {
     return fetch("https://cab230.hackhouse.sh/years")
         .then(res => res.json())
-        .then(res => res.areas)
+        .then(res => res.years)
+}
+export function useYears() {
+    const [yearLoading, setYearLoading] = useState(true);
+    const [yearError, setYearError] = useState(null);
+    const [years, setYear] = useState([]);
+
+    useEffect(() => {
+        getYears()
+            .then(years => {
+                setYear(years);
+                setYearLoading(false);
+            })
+            .catch(e => {
+                setYearError(e);
+                setYearLoading(false);
+            });
+    }, []);
+    return {
+        years,
+        yearLoading,
+        yearError
+    };
 }
 
-// ------------------------ SEARCH ----------------------------
+/**
+ * Search filter
+ * @param {*} search 
+ */
 export function useSearchBtn(search) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -175,7 +254,7 @@ export function serBtn(search) {
         })
 }
 
-function getCookie(cname) {
+export function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');
@@ -189,4 +268,54 @@ function getCookie(cname) {
         }
     }
     return "";
+}
+
+export function filBtn() {
+    let getParam = { method: "GET" };
+    let head = { Authorization: `Bearer ${getCookie("token")}` };
+    getParam.headers = head;
+
+    const baseURL = "https://cab230.hackhouse.sh/search?";
+
+    var data = `offence=${window.inputOff}`;
+
+    if (window.inputArea != undefined) {
+        url += `&area=${window.inputArea}`;
+    }
+    if (window.inputAge != undefined) {
+        url += `&age=${window.inputAge}`;
+    }
+    if (window.inputGen != undefined) {
+        url += `&gender=${window.inputGen}`;
+    }
+    if (window.inputYear != undefined) {
+        url += `&year=${window.inputYear}`;
+    }
+
+    const url = baseURL + data;
+
+    return fetch(encodeURI(url), getParam)
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error("Network response was not ok.");
+        })
+        .then(res => res.showResult)
+        .then(showResults => showResults)
+        .then(res => {
+            res.map(res => ({
+                LGA: res.LGA,
+                total: res.total,
+                lat: res.lat,
+                lng: res.lng
+            }))
+            return res;
+        })
+        .catch(function (error) {
+            console.log(
+                "There has been a problem with your fetch operation: ",
+                error.message
+            );
+        })
 }

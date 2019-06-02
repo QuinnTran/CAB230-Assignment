@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { regBtn } from "../api"
+import { logBtn } from "./api";
 
-export default function Reg() {
+export default function Log() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
     <div className="container">
-      <h2>Create your account here</h2>
+      <h2>Welcome, please sign in!</h2>
       <form
         onSubmit={event => {
           event.preventDefault();
         }}
       >
-        <label htmlFor="email">Email:</label>
+        <label htmlFor="email">Username:</label>
         <input
           type="email"
           name="email"
@@ -26,7 +26,7 @@ export default function Reg() {
         <br></br><br></br>
         <label htmlFor="password">Password: </label>
         <input
-          type="text"
+          type="password"
           name="password"
           id="password"
           value={password}
@@ -36,8 +36,10 @@ export default function Reg() {
           }}
         />
         <br></br><br></br>
-        <button type="submit" onClick={() => regBtn(email, password)}>Register</button>
+        <button onClick={() => logBtn(email, password)}>Login</button>
       </form>
+      
+      <div id="app"></div>
     </div>
   );
 }
