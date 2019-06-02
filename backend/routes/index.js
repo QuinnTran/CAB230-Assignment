@@ -67,7 +67,7 @@ router.get("/search?:query", function (req, res, next) {
   }
   catch (err) {
     console.log(err);
-    res.json({
+    res.status(401).json({
       "error": true,
       "message": "oops! it looks like you're missing the authorization header"
     })
@@ -94,39 +94,6 @@ router.get("/search?:query", function (req, res, next) {
     values[i] = varArray[i][1].split(',');
   }
 
-  // OFFENCE FILTER AND MESSAGES
-  //error messages
-  if (offence == undefined) {
-    res.status(400).send({
-      "message": "oops! it looks like you're missing the offence query parm"
-    })
-  }
-  if (area == undefined) {
-    res.status(400).send({
-      "message": "oops! it looks like you're missing the offence query parm"
-    })
-  }
-  if (age == undefined) {
-    res.status(400).send({
-      "message": "oops! it looks like you're missing the offence query parm"
-    })
-  }
-  if (gender == undefined) {
-    res.status(400).send({
-      "message": "oops! it looks like you're missing the offence query parm"
-    })
-  }
-  if (year == undefined) {
-    res.status(400).send({
-      "message": "oops! it looks like you're missing the offence query parm"
-    })
-  }
-  if (month == undefined) {
-    res.status(400).send({
-      "message": "oops! it looks like you're missing the offence query parm"
-    })
-  }
-
   if (numFilters == 1) {
     req.db
       .from('offences')
@@ -143,7 +110,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
+        res.status(400).json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
 
   } else if (numFilters == 2) {
@@ -164,7 +131,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
+        res.status(400).json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
   } else if (numFilters == 3) {
     req.db
@@ -184,7 +151,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
+        res.status(400).json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
   } else if (numFilters == 4) {
     req.db
@@ -205,7 +172,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
+        res.status(400).json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
   } else if (numFilters == 5) {
     req.db
@@ -227,7 +194,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
+        res.status(400).json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
   } else if (numFilters == 6) {
     req.db
@@ -250,7 +217,7 @@ router.get("/search?:query", function (req, res, next) {
       })
       .catch((err) => {
         console.log(err);
-        res.json({ "message": "oops! it looks like you're missing the offence query parm" })
+        res.status(400).json({ "message": "oops! it looks like you're missing the offence query parm" })
       })
   }
 });

@@ -36,7 +36,6 @@ app.use(logger('common'));
 app.use(helmet());
 app.use(cors());
 
-
 // Knex
 app.use((req, res, next) => {
   req.db = knex
