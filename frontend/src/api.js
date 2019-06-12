@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from "react-dom"
 
-export const baseURL = "http://localhost:3000";
+export const baseURL = "https://172.22.31.176:443";
+
 /**
  * Authentication
  * @param {*} email 
